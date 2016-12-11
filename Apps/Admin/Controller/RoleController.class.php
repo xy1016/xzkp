@@ -10,16 +10,15 @@ class RoleController extends CommonController {
    }
 
    /*修改角色*/
-   public function update($id)
-   {
+    public function update($id)
+    {
       //显示表单内容
-      if(IS_GET)
-      {  
-         $row = $this->model->find($id);
-         $res = $this->model->getData();
-         $this->assign(['row' => $row, 'list' => $res]);
-         $this->display();
-      }
+        if(IS_GET && IS_AJAX)
+        {  
+            $res = $this->model->findByID($id);
+            $this->assign($res);
+            $this->display();
+        }
       elseif(intval($id) > 0){   //处理表单提交的修改数据
          $this->validatePost();
          if(count($_POST['permission3']) < 1) $this->ajaxReturn(['status' => 0]);
@@ -51,7 +50,7 @@ class RoleController extends CommonController {
             }
          }
       }
-   }
+    }
 
    //找到该角色下的权限节点
    public function own_role($id)
@@ -137,6 +136,6 @@ class RoleController extends CommonController {
    public function test()
    {    
 
-        $this->model->getData();
+        $this->model->findByID(1);
    }
 }

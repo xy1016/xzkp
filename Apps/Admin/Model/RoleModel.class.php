@@ -56,4 +56,21 @@ class RoleModel extends \Think\Model\RelationModel
         return ['list' => $list];
     } 
 
+    public function findByID($id)
+    {   
+        $res = $this->getData();
+        $res['role'] = $this->where(['id' => $id])->field(['id', 'name', 'remark'])->find();
+        return $res;
+    }
+
+    protected function getChildren($id, $column)
+    {
+/*        $permission3 = $this->table(__ROLE_NODE__)->field(['role_id', 'node_id'])->where(['role_id' => $id, 'level' =])->getField('node_id', true);
+        if($column != 'name') return $permission3;
+        foreach($permission3 as $nodeID)
+        {
+            $res = $this->table(__NODE__)->field(['id', 'name'])->where(['id' => $nodeID])->getField($column, true);
+        }
+        return $res;*/
+    }
 }

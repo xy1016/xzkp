@@ -1,0 +1,84 @@
+﻿<style>
+.myaction{
+  color:orange;
+}
+.myaction:nth-of-type(2){
+  margin-left:2em;
+}
+</style>
+<div class="modal inmodal fade" id="modal_update" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <form class="form-horizontal m-t" action="__URL__/update" autocomplete="off">
+      <input type="hidden" name="id" value="{$role['id']}">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title">添加角色</h4>
+        </div>
+        <div class="modal-body">
+			<div>
+		    <div class="form-group">
+		        <label class="col-sm-3 control-label">角色名称：</label>
+		        <div class="col-sm-8">
+		            <input type="text" name="name" class="form-control" value="{$role['name']}"> 
+                    <span class="help-block m-b-none"></span>
+		        </div>
+		    </div>
+		    <div class="form-group">
+		        <label class="col-sm-3 control-label">描述：</label>
+		        <div class="col-sm-8">
+		            <input type="text" name="remark" class="form-control" value="{$role['remark']}"><span class="help-block m-b-none"></span>
+		        </div>
+		    </div>
+		    <div class="form-group">
+        <label class="col-sm-1 control-label"></label>
+		        <div class="col-sm-8 i-checks">
+                <foreach name="list" item="row">
+                  <div class="checkbox moduleCheckBox">
+                      <label>
+                          <input type="checkbox"> 全选</label>
+                  </div>
+                  <foreach name="row" item="contr">
+                       <div class="checkbox" style="margin-left:2em">
+                          <label class="checkbox contrCheckBox"><input type="checkbox" value="{$contr.con.id}" name="permission2[]" data-nid="{$contr.con.id}"> {$contr.con.remark}</label>
+                         <?php foreach($contr['action'] as $act): ?>
+                          <label class="checkbox-inline myaction">
+                                <input type="checkbox" value="{$act['id']}" data-nid="{$act['id']}" id="inlineCheckbox2" name="permission3[]"> {$act['remark']}
+                          </label>
+                         <?php endforeach;?>
+                      </div>
+                  </foreach>
+                </foreach>
+		        </div>
+		    </div>
+      </div>
+		</div>
+        <div class="result" style="text-align:center;font-weight:bold;margin:8px 0;"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+          <button type="submit" class="btn btn-primary" id="submitButton">保存</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script src="__ROOT__/Static/js/xzkp/xzkp.js"></script>
+<script>
+var id = {$role['id']};
+$(function(){
+    $(".i-checks").iCheck({checkboxClass:"icheckbox_square-green",radioClass:"iradio_square-green",});
+    $(".moduleCheckBox input[type=checkbox]").on('ifChecked', function(){
+      $(this).parents(".moduleCheckBox").nextAll().find("input[type=checkbox]").andSelf().iCheck("check");
+    });
+    $(".moduleCheckBox input[type=checkbox]").on('ifUnchecked', function(){
+      $(this).parents(".moduleCheckBox").nextAll().find("input[type=checkbox]").andSelf().iCheck("uncheck");
+    });
+  $.post("__URL__/own_role", {"id":id}, function(data){
+      var res = data.res;
+      for(var i = 0; i < res.length; i++)
+      {
+        $("#modal_update input[data-nid=" + res[i] +"]").iCheck("check");
+      }
+  },'JSON');
+});
+</script>

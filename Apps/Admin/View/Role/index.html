@@ -9,6 +9,7 @@
 <div class="ibox-content">
     <div style="margin:10px 0">
         <span class="l"><a onclick="showModal('__URL__/create', 'modal_create')" class="btn btn-success">添加角色</a></span>
+         <span class="l"><a onclick="showModal('__URL__/update', 'modal_update')" class="btn btn-warning">修改角色</a></span>
         <span class="l"><a onclick="" class="btn btn-danger">删除角色</a></span>
     </div>
         <div>
@@ -43,21 +44,6 @@
     </div>
 <div id="modalContainer" style="display:none"></div>
 <script>
-var flag = true;
-function updateAll()
-{
-  if(flag === false) return false;
-  flag = false;
-  $("#updateAll").text("更新中...");
-  $.post("{:U('Admin/Node/update_all')}", function(data){
-    if(data.status=1){
-      $("#updateAll").text("自动更新");
-      swal("更新成功！", "您更新了" + data.info + "个权限", "success");
-      flag = true;
-    }
-  });
-}
-
 function showModal(url, modalID){
     var id = $(".idColumn input:checked").val();
     if(id == undefined && modalID != 'modal_create') return false;
