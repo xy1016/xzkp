@@ -5,8 +5,7 @@ class RoleController extends CommonController {
    /*显示列表*/
    public function index() //查 分页显示数据
    {   
-      $res = $this->model->queryPage();
-      $this->assign($res);
+      $this->assign($this->model->queryPage());
       $this->display();
    }
 
@@ -61,50 +60,48 @@ class RoleController extends CommonController {
       $this->ajaxReturn(['status' => 1, 'res' => $res]);
    }
 
-   public function create()
-   {  
-      if(IS_GET && IS_AJAX)
-      {
-         if($res = $this->model->getData())
-         $this->assign($res); 
-         $this->display();
-      }
-      else if(IS_POST && IS_AJAX){
-         $this->validatePost();
-         if(count($_POST['permission3']) < 1) $this->ajaxReturn(['status' => 0]);
-         $role['name'] = I('post.name');
-         $role['remark'] = I('post.remark');
-         $this->model->startTrans(); //开启事务处理
-         $id = $this->model->add($role);
-         if(!$id)  //如果role表写入失败,滚回
-         {
-            $error[] = ['ele' => 'remark', 'error' => '写入数据失败, 请等候更佳的网络连接'];
-            $this->ajaxReturn(['status' => 0, 'error' =>$error]);
-         }
-         for($i = 3; $i >=0; $i--)
+    public function create()
+    {  
+        if(IS_GET && IS_AJAX)
+        {
+            $this->assign($this->model->getData()); 
+            $this->display();
+        }
+        else if(IS_POST && IS_AJAX)
+        {
+            $this->validatePost();
+            $post = I('post.');
+            $role['name'] = $post['name'];
+            $role['remark'] = $post['remark'];
+            $id = $this->model->add($role);
+            if(!$id)  //如果role表写入失败, 返回失败
             {
-               foreach(array_values($_POST['permission'.$i]) as $node)
-               {
-                  $data['node_id'] = $node;
-                  $data['role_id'] = $id;
-                  $data['level'] = $i;
-                  $dataList[] = $data;
-               }
+                $error[] = ['ele' => 'remark', 'error' => '写入数据失败, 请等候更佳的网络连接'];
+                $this->ajaxReturn(['status' => 0, 'error' =>$error]);
             }
-         //批量添加到数据库
-         if($this->model->table(__ROLE_NODE__)->field(['node_id', 'role_id', 'level'])->addAll($dataList))
-         {
-            $this->model->commit();
-            $this->ajaxReturn(['status' => 1]);
-         }
-         else
-         {
-            $this->model->rollback(); //事务回滚
-            $error[] = ['ele' => 'remark', 'error' => '写入数据失败, 请等候更佳的网络连接'];
+            //保存权限id
+            if(count($post['permission3']) > 0)
+            {
+                for($i = 3; $i >= 1; $i--)
+                {
+                    foreach(array_values($_POST['permission'.$i]) as $node)
+                    {
+                      $data['node_id'] = $node;
+                      $data['role_id'] = $id;
+                      $data['level'] = $i;
+                      $dataList[] = $data;
+                    }
+                }
+                //批量添加到数据库
+                if($this->model->table(__ROLE_NODE__)->field(['node_id', 'role_id', 'level'])->addAll($dataList))
+                {
+                    $this->ajaxReturn(['status' => 1]);
+                }
+            }
+            $error[] = ['ele' => 'remark', 'error' => '写入数据失败, 请等候更佳的网络连接!'];
             $this->ajaxReturn(['status' => 0, 'error' =>$error]);
-         }
-      }
-   }
+        }
+    }
 
    public function get_action($id)
    {  

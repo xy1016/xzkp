@@ -5,7 +5,7 @@ class RoleModel extends \Think\Model\RelationModel
     protected $patchValidate = true;
     protected $_validate = [
         ['name', 'require', '角色名称不能为空', 1, '', 3], 
-        ['name', '/^\w{3,30}$/', '3-20位字母数字下划线', 1, '', 3], 
+        // ['name', '/^\w{3,30}$/', '3-20位字母数字下划线', 1, '', 3], 
         ['name', '', '该角色名已存在', 1, 'unique', 3], 
         ['remark','require','描述不能为空',1,'',3], 
         // ['pid','require','请至少选择一个权限',1,'',3], 
@@ -23,14 +23,12 @@ class RoleModel extends \Think\Model\RelationModel
     ];
 
 
-    public function queryPage($pageSize = 5)
+    public function queryPage()
     {   
-        
-        $count = $this->where($map)->count();
-        $pagination = new \Think\Page($count,$pageSize);
+        $pagination = getPage($this);
         $btn = $pagination->show();
-        $list = $this->order('id desc')->limit($pagination->firstRow.','.$pagination->listRows)->relation(true)->select();
-        return ['btn' => $btn, 'list' => $list, 'count' => $count, 'status' => 1];
+        $list = $this->order('id desc')->field(['id', 'remark', 'name'])->select();
+        return ['btn' => $btn, 'list' => $list];
     }
 
     public function getData()
