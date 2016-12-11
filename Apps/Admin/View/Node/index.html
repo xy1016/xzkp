@@ -1,0 +1,94 @@
+﻿<extend name="Public/layout" />
+<block name="content">
+<block name="cssFile">
+<link href="__ROOT__/Static/css/plugins/iCheck/custom.css" rel="stylesheet">
+</block>
+<block name="content">
+  <div class="ibox-title">
+    <button class="btn btn-primary btn-xs" onclick="location.reload()"><i class="fa fa-refresh"></i></button>
+  </div>
+<div class="ibox-content">
+    <div style="margin:10px 0">
+        <span class="l"><a onclick="updateAll()" class="btn btn-warning" id="updateAll"><i class="fa fa-arrows"></i> 自动更新</a></span>
+        <span class="l"><a onclick="showModal('__URL__/create', 'modal_create')" class="btn btn-success">手动添加</a></span>
+        <span class="l"><a onclick="showModal('__URL__/update', 'modal_update')" class="btn btn-info"><i class="fa fa-edit"></i> 编辑权限</a></span>
+        <span class="l"><a onclick="" class="btn btn-danger">删除权限</a></span>
+    </div>
+<!--         <div class="row">
+ <form action="__URL__/index">
+    <div class="col-sm-3">
+        <div class="input-group">
+             <input placeholder="请输入模块/控制器" class="form-control" type="text" name="name"> <span class="input-group-btn">
+             <button id="searchBtn" class="btn btn-primary"><i class="fa fa-search"></i> 查询</button>
+        </div>
+    </div>
+</form>
+</div> -->
+        <div>
+        <table id="dataTable" class="table table-border table-bordered table-hover table-bg table-sort" style="border-width:1px">
+        <caption>权限节点仅供开发人员使用, 一般情况下请勿操作, 仅超管可见</caption>
+        <thead>
+            <tr>
+                <th width="4"></th>
+                <th>简介</th>
+                <th>级别</th>
+                <th>路径</th>
+            </tr>
+        </thead>
+        <tbody>
+        <foreach name="list" item="v">
+            <tr>
+               <td class="idColumn">
+                    <div><label style="padding-top:0.5em"><input type="checkbox" value="{$v['id']}" name="id"></label></div>
+                 </td>
+                <td>{$v['remark']}</td>
+                <td>{$v['level']}</td>
+                <td>{$v['name']}</td>
+                 <style>
+                    .td-manage a{margin-right:5px;}
+                 </style>
+            </tr>
+        </foreach> 
+        </tbody>
+    </table>
+        </div>
+        <ul class="pagination" style="margin-bottom:20px">{$btn}</ul>
+     <script> 
+        $('.pagination a').unwrap('div').wrap('<li></li>');
+        $('.pagination span').wrap('<li class="active"></li>');
+    </script>   
+    </div>
+<div id="modalContainer" style="display:none"></div>
+<script>
+var flag = true;
+function updateAll()
+{
+  if(flag === false) return false;
+  flag = false;
+  $("#updateAll").text("更新中...");
+  $.post("{:U('Admin/Node/update_all')}", function(data){
+    if(data.status=1){
+      $("#updateAll").text("自动更新");
+      swal("更新成功！", "您更新了" + data.info + "个权限", "success");
+      flag = true;
+    }
+  });
+}
+
+function showModal(url, modalID){
+    var id = $(".idColumn input:checked").val();
+    if(id == undefined && modalID != 'modal_create') return false;
+    var url = url + "/id/" + id;
+    $("#modalContainer").load(url, function(response, status, xhr){
+        $("#" + modalID).modal('show');
+        $.getScript("__ROOT__/Static/js/content.min.js?v=1.0.0", function() {});
+    })
+}
+
+$(function(){
+  $(".idColumn input").click(function(){
+        $(".idColumn input").not(this).removeAttr("checked");
+    });
+})
+</script>
+</block>

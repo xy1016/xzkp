@@ -1,0 +1,101 @@
+<style>
+.form-horizontal .control-label {
+    text-align: left;
+}
+</style>
+<div class="modal inmodal fade" id="modal_update" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+         <form class="form-horizontal m-t" action="__URL__/update" autocomplete="off">
+         <input type="hidden" name="id" value="{$list['id']}">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">编辑运营商</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 b-r">
+                        <div class="col-sm-10">
+                            <div class="ibox">
+                                <div class="ibox-content">
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label" for="name">名字：</label>
+                                            <div class="col-sm-8">
+                                                <input id="name" name="name" class="form-control" type="text" value="{$list['name']}">
+                                                <span class="help-block m-b-none"><i class=""></i></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label" for="server_ip">游戏服务器地址：</label>
+                                            <div class="col-sm-8">
+                                                <input id="server_ip" name="server_ip" class="form-control" type="text" aria-required="true" aria-invalid="true" class="error" value="{$list['server_ip']}">
+                                                <span class="help-block m-b-none"><i class=""></i></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label" for="verify_code">开机效验码</label>
+                                            <div class="col-sm-8">
+                                                <div class="input-group">
+                                                <input type="text" class="form-control" name="verify_code" readonly value="{$list['verify_code']}"><span class="input-group-btn"><button id="generate_btn" onclick="getCode('modal_update')" class="btn btn-primary dim" type="button" style="margin-left:5px">重新生成</button></span>
+                                                </div>
+                                            </div>    
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label" for="note">备注：</label>
+                                            <div class="col-sm-8">
+                                                <input id="note" name="note" class="form-control" type="text" aria-required="true" aria-invalid="true" class="error" value="{$list['note']}">
+                                                <span class="help-block m-b-none"><i class=""></i></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label" for="note" id="gameList">运营商授权游戏：</label>
+                                                <button class="btn btn-success btn-sm" type="button" onclick="selectBtn('modal_update', true)">全选</button>
+                                               <button class="btn btn-danger btn-sm" type="button" onclick="selectBtn('modal_update', false)">全不选</button>
+                                               <button class="btn btn-warning btn-sm" type="button" onclick="selectBtn('modal_update')">反选</button>
+                                        <div class="input-group" style="padding-left:1em;padding-top:1em" id="selectGame">
+                                                <foreach name="gameList" item="game">
+                                                    <div class="checkbox-inline i-checks">
+                                                        <label><input type="checkbox" name="game_name[]" value="{$game['id']}">{$game['game_name']}</label>
+                                                    </div>
+                                                </foreach>
+                                            </div>
+                                        </div>
+                                        <div class="result" style="text-align:center;font-weight:bold;margin:8px 0;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                <button type="submit" class="btn btn-primary" id="submitButton">保存</button>
+            </div> 
+            </form> 
+        </div>
+    </div>
+</div>
+ <script src="__ROOT__/Static/js/xzkp/xzkp.js"></script>
+<script>
+var id = {$list['id']};
+$(function(){
+    $(".i-checks").iCheck({checkboxClass:"icheckbox_square-green",radioClass:"iradio_square-green",});
+    var str = {"id":id};
+    $.post("__URL__/getChecked", str, function(data){
+        if(data){
+            for(i = 0; i< data.length; i++){
+                $("#modal_update input[type=checkbox][value='" + data[i] + "']").iCheck('check');
+                // $("input[name=" + k + "]:not([type=checkbox])").val(data[k]);
+            }
+
+        }
+    })
+});
+function selectBtn(modalID, flag){
+   if(flag !== undefined){
+        var cc = (flag === true)?'check':'uncheck';
+         $("#" + modalID).find('input[type=checkbox]').iCheck(cc);
+   }
+   else $("#" + modalID).find('input[type=checkbox]').iCheck('toggle');
+}
+</script>

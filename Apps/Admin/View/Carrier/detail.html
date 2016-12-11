@@ -1,0 +1,112 @@
+<style>
+table.borderless td,table.borderless th{
+     border: none !important;
+     font-size: 14px;
+     font-family:"宋体";
+}
+</style>
+<div class="modal inmodal fade" id="modal_detail" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+         <form class="form-horizontal m-t" onsubmit="return false">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">运营商详情</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+<div class="col-sm-10">
+    <div class="ibox float-e-margins">
+  <div class="">
+    <h4 style="padding-left:25px;margin-top:0"><b>{$list['name']}</b></h4>
+</div>
+        <div class="ibox-content">
+            <table class="table borderless">
+            <tbody>
+            <tr>
+                <td>
+                    运营商创建时间
+                </td>
+                <td>
+                    {$list['addtime']}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    运营商创建人
+                </td>
+                <td>
+                    {$list['operator']}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    运营商累计开机时间
+                </td>
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    最高在线人数
+                </td>
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    会员总数
+                </td>
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    代理总数
+                </td>
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    总充值额
+                </td>
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    总兑奖额
+                </td>
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    总盈利
+                </td>
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    人均充值额
+                </td>
+                <td>
+                </td>
+            </tr>
+                </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+            </div> 
+            </form> 
+        </div>
+    </div>
+</div>
+

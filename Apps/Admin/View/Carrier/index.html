@@ -1,0 +1,167 @@
+<extend name="Public/layout" />
+<block name="cssFile">
+<link href="__ROOT__/Static/css/plugins/iCheck/custom.css" rel="stylesheet">
+</block>
+<block name="content">
+  <div class="ibox-title">
+    <button class="btn btn-primary btn-xs" onclick="location.reload()"><i class="fa fa-refresh"></i></button>
+  </div>
+<div class="ibox-content">
+    <div style="margin:10px 0">
+        <span class="l"><a onclick="showModal('create', 'modal_create')" class="btn btn-success"><i class="fa fa-arrows"></i> 新增运营商</a></span>
+        <span class="l"><a onclick="showModal('detail', 'modal_detail')" class="btn btn-primary"><i class="fa fa-leaf"></i> 运营商详情</a></span>
+        <span class="l"><a onclick="showModal('__URL__/update', 'modal_update')" class="btn btn-info"><i class="fa fa-edit"></i> 编辑运营商</a></span>
+        <span class="l"><a onclick="showModal('__URL__/updateDesk', 'modal_updateDesk')" class="btn btn-warning"><i class="fa fa-desktop"></i> 游戏桌数设定</a></span>
+        <span class="l"><a onclick="showModal('__URL__/agent', 'modal_agent')" class="btn btn-white"><i class="fa fa-list"></i> 代理员开户</a></span>
+    </div>
+        <div class="row">
+         <form action="__URL__/index">
+            <div class="col-sm-3">
+                <div class="input-group">
+                     <input placeholder="请输入运营商名" class="form-control" type="text" name="name"> <span class="input-group-btn">
+                     <button id="searchBtn" class="btn btn-primary"><i class="fa fa-search"></i> 查询</button>
+                </div>
+            </div>
+        </form>
+        </div>
+        <div>
+        <table id="dataTable" class="table table-border table-bordered table-hover table-bg table-sort" style="border-width:1px">
+        <thead>
+            <tr>
+                <th width="4"></th>
+                <th>运营商名称</th>
+                <th width="400">授权游戏</th>
+                <th>授权总桌数</th>
+                <th>运营桌数</th>
+                <th>当前在线</th>
+                <th>会员总数</th>
+                <th>代理总数</th>
+                <th>服务器状态</th>
+                <th>累计盈利</th>
+                <th>充值预警</th>
+                <th>日活预警</th>
+                <th>备注</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+        <foreach name="list" item="v">
+            <tr>
+                <td class="idColumn">
+                    <div><label style="padding-top:0.5em"><input type="checkbox" value="{$v['id']}" name="id"></label></div>
+                 </td>
+                <td>{$v['name']}</td>
+                <td>
+                    <foreach name="v.game" item="singleGame">
+                        <span style="margin-right:5px">{$singleGame}</span>
+                    </foreach>
+                </td>
+                <td>{$v['total_desk']}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="td-status"><span class="label <if condition="($v['status'] eq '已开启')">label-success<else />label-default</if> radius">{$v['status']}</span></td>
+                 <td>{$v['total_income']}</td>
+                 <td></td>
+                 <td></td>
+                 <td>{$v['note']}</td>
+                 <style>
+                    .td-manage a{margin-right:5px;}
+                 </style>
+                <td class="td-manage">
+                <if condition="($v['status'] eq '已开启')"><button class="btn btn-warning btn-circle btn-sm switch" type="button" onClick="turnOff(this, {$v['id']})" title="停用服务器"><i class="fa fa-times"></i></button><else /><button class="btn btn-success btn-circle btn-sm switch" type="button" title="启用服务器" onClick="turnOn(this, {$v['id']})"><i class="fa fa-check"></i></button></if>
+                </td>
+            </tr>
+        </foreach> 
+        </tbody>
+    </table>
+        </div>
+        <ul class="pagination" style="margin-bottom:20px">{$btn}</ul>
+     <script> 
+        $('.pagination a').unwrap('div').wrap('<li></li>');
+        $('.pagination span').wrap('<li class="active"></li>');
+    </script>   
+    </div>
+<div id="modalContainer" style="display:none"></div>
+<script>
+$(function() {
+    // $(".i-checks").iCheck({checkboxClass:"icheckbox_square-green",radioClass:"iradio_square-green",});
+    //模态框清除提示， 表单重置
+/*    $('.modal').on('show.bs.modal', function (e){
+       $('.modal form')[0].reset();
+       $('.modal form').find(".result").html('').end().find("input:not('[type*=hidden], [readonly], [type*=checkbox]')").next().children().remove();
+    });
+    $('#modal_create').on('show.bs.modal', function (){
+       getCode('modal_create');
+    });*/
+    //编辑
+    $(".idColumn input").click(function(){
+        $(".idColumn input").not(this).removeAttr("checked");
+    });
+});
+
+function showModal(url, modalID){
+    var id = $(".idColumn input:checked").val();
+    if(id == undefined && modalID != 'modal_create') return false;
+    var url = url + "/id/" + id;
+    $("#modalContainer").load(url, function(response,status,xhr){
+        $("#" + modalID).modal('show');
+        $.getScript("__ROOT__/Static/js/content.min.js?v=1.0.0", function() {});
+    })
+}
+//get a code
+function getCode(modalID)
+{
+    $.post("__URL__/getCode", function(data){
+          $("#" + modalID).find('input[name="verify_code"]').val(data);
+    })
+}
+
+function turnOff(obj, id){
+    swal({
+        title: "您确定要" + obj.title + "吗",
+        text: "重要操作，请谨慎行动！",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: obj.title,
+        closeOnConfirm: false
+    }, function () {
+        var str = {'id':id, 'status':0}
+        $.post('__URL__/updateStatus', str, function(data){
+            if(data.status == 1)
+            {
+                $(obj).parents("tr").find(".td-status").html('<span class="label label-default radius">未开启</span>');
+                $(obj).replaceWith('<button class="btn btn-success btn-circle btn-sm switch" type="button" onClick="turnOn(this, ' + id + ')" title="启用服务器"><i class="fa fa-check"></i></button>');
+                swal("操作成功！", "您已经" + obj.title + "。", "success");
+            }
+            else swal("操作失败！", "请稍后尝试！", "danger");
+         });  
+    });
+}
+
+function turnOn(obj, id){
+    swal({
+        title: "您确定要" + obj.title + "吗",
+        text: "重要操作，请谨慎行动！",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: obj.title,
+        closeOnConfirm: false
+    }, function () {
+        var str = {'id':id, 'status':1}
+        $.post('__URL__/updateStatus', str, function(data){
+            if(data.status == 1)
+            {
+                $(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已开启</span>');
+                $(obj).replaceWith('<button class="btn btn-warning btn-circle btn-sm switch" type="button" onClick="turnOff(this, ' + id + ')" title="停用服务器"><i class="fa fa-times"></i></button>');
+                swal("操作成功！", "您已经" + obj.title + "。", "success");
+            }
+            else swal("操作失败！", "请稍后尝试！", "danger");
+         });  
+    });
+}
+</script>
+</block>

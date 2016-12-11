@@ -1,0 +1,57 @@
+<div class="modal inmodal fade" id="modal_create" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <form class="form-horizontal m-t" action="__URL__/create" autocomplete="off">
+      <input type="hidden" name="level" value="3">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title">添加权限节点</h4>
+        </div>
+        <div class="modal-body">
+          <label for="module"><span class="text-danger">* </span>模块:</label>
+          <select class="form-control" id="module" name="module">
+            <option value=''>请选择模块</option>
+            <foreach name="list" item="v">
+            <option value="{$v.id}"> {$v.name}</option>
+            </foreach>
+          </select>
+          <p class="help-block">
+          </p>
+          <label for="pid"><span class="text-danger">* </span>控制器:</label>
+          <select class="form-control" id="pid" name="pid">
+            <option value=''>请选择控制器</option>
+          </select>
+          <p class="help-block">
+          </p>
+          <label for="remark"><span class="text-danger">* </span>描述</label>
+          <input type="text" class="form-control" id="remark" name="remark" placeholder="读，写...">
+          <p class="help-block">
+          </p>
+          <label for="name"><span class="text-danger">* </span>权限方法</label>
+          <input type="text" class="form-control" id="name" name="name" placeholder="了解代码才来手动添加，此处填控制器里面的方法">
+          <p class="help-block">
+          </p>
+        </div>
+        <div class="result" style="text-align:center;font-weight:bold;margin:8px 0;"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+          <button type="submit" class="btn btn-primary" id="submitButton">保存</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+$("#module").change(function(){
+    var str = {"id":$(this).val()};
+    $("#pid").children(":not(:first)").remove();
+    if(!$(this).val()) return false;
+    $.post("{:U('Admin/Node/child')}", str, function(data){
+        for (var i = 0; i < data.length; i++) {
+            var option = $('<option value="' + data[i].id + '">' + data[i].name + '</option>');
+            option.appendTo("#pid");
+        }
+    },'JSON');
+});
+</script>
+<script src="__ROOT__/Static/js/xzkp/xzkp.js"></script>

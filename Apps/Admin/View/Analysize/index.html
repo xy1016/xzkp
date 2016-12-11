@@ -1,0 +1,162 @@
+<extend name="Public/layout" />
+<block name="content">
+    <div class="ibox-title">
+        <button class="btn btn-primary btn-xs" onclick="location.reload()">
+            <i class="fa fa-refresh">
+            </i>
+        </button>
+    </div>
+    <div class="ibox-content">
+        <div class="col-sm-2">
+            <h2>运营商数据统计</h2>
+        </div>
+        <div class="col-sm-6">
+            <button type="button" class="btn btn-w-m btn-success" id="updateData">全部更新</button>
+        </div>
+    <div class="ibox-content">
+        <div class="row" style="padding-left:0.7em">
+        <form role="form" class="form-inline" action="__URL__/index">
+            <div class="form-group">
+                <input class="form-control layer-date" placeholder="选定最近一月的日期" name="updated_time" id="startDate" onclick="laydate({istime: true, format: 'YYYY-MM-DD', min: laydate.now(-29)})">
+            </div>
+            <div class="form-group">
+                <div >
+                    <select class="form-control m-b" name="carrierID" style="margin-bottom:0">
+                        <option value="" selected="selected">所有运营商</option>
+                        <foreach name="carriers" item="carrier"> 
+                            <option value="{$carrier['id']}">{$carrier['name']}</option>
+                        </foreach>
+                    </select>
+                </div>
+            </div>
+            <button class="btn btn-w-m btn-info" type="submit"><i class="fa fa-search"></i> 查看</button>
+        </form>
+        </div>
+    </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div>
+                    <div class="">
+                        <table class="table" id="statisticsTable">
+                            <thead>
+                                <tr>
+                                    <th width="80">ID</th>
+                                    <th>
+                                        运营商名称
+                                    </th>
+                                    <th>
+                                        订单统计
+                                    </th>
+                                    <th>
+                                        营收统计
+                                    </th>
+                                    <th>
+                                        付费ARPU
+                                    </th>
+                                    <th>
+                                        日活统计
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <if condition="$list neq null">
+                                <foreach name="list" item="row">
+                                    <tr>
+                                        <td>{$row['id']}</td>
+                                        <td>
+                                            {$row['name']}
+                                        </td>
+                                        <td>
+                                            {$row['orders']|default="0"}
+                                        </td>
+                                        <td>
+                                            ¥ {$row['income']|default="0"}
+                                        </td>
+                                        <td>
+                                            ¥{$row['arpu']|default="0"}
+                                        </td>
+                                        <td>
+                                            {$row['active_users']|default="0"}
+                                        </td>
+                                    </tr>
+                                </foreach>
+                                <else/>
+                                    <tr>
+                                        <td colspan="6"><span>还没有今天的运营商统计数据， 请更新。</span></td>
+                                    </tr>
+                            </if>
+                            </tbody>
+                        </table>
+                            <ul class="pagination" style="margin-bottom:20px">{$btn}</ul>
+     <script> 
+        $('.pagination a').unwrap('div').wrap('<li></li>');
+        $('.pagination span').wrap('<li class="active"></li>');
+    </script> 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ibox-content">
+        <div class="echarts" id="carrierChart"">
+        </div>
+    </div>
+    </div>
+<script src="__ROOT__/Static/js/demo/echarts.js">
+</script>
+    <script type="text/javascript">
+    var updated_time = eval({$statistics['updated_time']});
+    var total_income = eval({$statistics['total_income']});
+    var chartTitle = "{$chartTitle}";
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('carrierChart'));
+        // 指定图表的配置项和数据
+        var option = {
+            title: {
+                text: chartTitle
+            },
+            tooltip: {},
+            legend: {
+                data:['营收统计'],
+            },
+            xAxis: {
+                data: updated_time,
+            },
+            yAxis: {
+                axisLabel: 
+                {
+                    show: true
+                },
+            },
+            series: [
+            {
+                name: '营收统计',
+                type: 'line',
+                data: total_income,
+                itemStyle: {
+                normal: {
+                label: {
+                     show: true,
+                        }
+                    }
+                },
+            },
+        ]
+    };
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
+<script>
+$(function(){
+    $("#updateData").click(function(e){
+        $.post("__URL__/updateData", function(data){
+            if(data.status == 1){
+                swal("Success!", "您已经更新数据", "success");
+            }
+            console.log(data.error);
+        });
+    })
+})
+</script>
+<script src="__ROOT__/Static/js/plugins/layer/laydate/laydate.js"></script>
+</block>

@@ -1,0 +1,76 @@
+<extend name="Public/layout" />
+<block name="cssFile">
+<style>
+#logTable .tableName{
+    font-weight:bold;
+}
+#logTable .myColumn{
+    color:purple;
+}
+#logTable .myValue{
+    color:green;
+}
+</style>
+</block>
+<block name="content">
+  <div class="ibox-title">
+    <button class="btn btn-primary btn-xs" onclick="location.reload()"><i class="fa fa-refresh"></i></button>
+  </div>
+<div class="ibox-content">
+    <h2>系统日志</h2>
+<div class="ibox-content">
+<div class="row">
+    <form role="form" class="form-inline" action="__URL__/index">
+    <div class="form-group">
+        <label for="start" class="control-label">查询时间: </label>
+        <input class="form-control layer-date" placeholder="开始时间" name="start" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputPassword2" class="sr-only">密码</label>
+         <input class="form-control layer-date" placeholder="结束时间" name="end" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})">
+    </div>   
+    <div class="form-group">
+        <div >
+            <select class="form-control m-b" name="userID" style="margin-bottom:0">
+                <option value="" selected="selected">所有管理员</option>
+                <foreach name="admins" item="admin"> 
+                    <option value="{$admin['id']}">{$admin['username']}</option>
+                </foreach>
+            </select>
+        </div>
+    </div>
+    <button class="btn btn-w-m btn-success" type="submit"><i class="fa fa-search"></i> 查询</button>
+    </form>
+</div>
+</div>
+    <div class="ibox-content">
+    <table class="table" id="logTable">
+        <thead>
+            <tr>
+                <th width="10%">时间</th>
+                <th width="10%">操作员身份</th>
+                <th width="10%">操作员帐号</th>
+                <th>操作记录</th>
+            </tr>
+        </thead>
+        <tbody>
+        <foreach name="list" item="row">
+            <tr>
+                <td>{$row['ctime']}</td>
+                <td>管理员</td>
+                <td>{$row['username']}</td>
+                <td>{$row['description']}</td>
+            </tr>
+        </foreach>
+        </tbody>
+    </table>
+</div>   
+    <ul class="pagination" style="margin-bottom:20px">{$btn}</ul>
+     <script> 
+        $('.pagination a').unwrap('div').wrap('<li></li>');
+        $('.pagination span').wrap('<li class="active"></li>');
+    </script>   
+</div>
+<script src="__ROOT__/Static/js/plugins/layer/laydate/laydate.js"></script>
+</block>
+

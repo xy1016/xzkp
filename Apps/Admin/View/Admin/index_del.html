@@ -1,0 +1,89 @@
+<extend name="Public/layout" />
+<block name="cssFile">
+<link href="__ROOT__/Static/css/plugins/iCheck/custom.css" rel="stylesheet">
+</block>
+<block name="content">
+  <div class="ibox-title">
+    <button class="btn btn-primary btn-xs" onclick="location.reload()"><i class="fa fa-refresh"></i></button>
+  </div>
+<div class="ibox-content">
+        <div class="row">
+         <form action="__URL__/index" method="post">
+            <div class="col-sm-3">
+                <div class="input-group">
+                    <input placeholder="请输入用户名|邮箱|手机号码" class="form-control" type="text" name="keywords"> <span class="input-group-btn">
+                    <button id="searchBtn" class="btn btn-primary"><i class="fa fa-search"></i> 查询</button>
+                   
+                </div>
+            </div>
+             </form>
+        </div>
+        <div class="table-responsive">
+        <table id="userTable" class="table table-border table-bordered table-hover table-bg table-sort" style="border-width:1px">
+        <thead>
+            <tr class="text-c">
+                <th width="100">图像</th>
+                <th width="100">用户名</th>
+                <th width="100">角色</th>
+                <th width="40">性别</th>
+                <th width="90">手机</th>
+                <th width="150">邮箱</th>
+                <th width="130">加入时间</th>
+                <th width="70">状态</th>
+                <th width="70">注册IP</th>
+                <th width="100">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+        <foreach name="list" item="v">
+            <tr class="text-c">
+                <td>{$v['pic']|default=''}</td>
+                <td><u style="cursor:pointer" class="text-primary" onclick="member_show({$v['id']},'member-show.html','10001','360','400')">{$v['username']}</u></td>
+                 <td>{$v['role']}</td>
+                 <td>{$v['sex']}</td>
+                 <td>{$v['phone']}</td>
+                 <td>{$v['email']}</td>
+                 <td>{$v['addtime']}</td>
+                 <td class="td-status"><span class="label <if condition="($v['status'] eq '已启用')">label-success<else />label-default</if> radius">{$v['status']}</span></td>
+                 <td>{$v['reg_ip']}</td>
+                 <style>
+                    .td-manage a{margin-right:5px;}
+                 </style>
+                <td class="td-manage">
+               <a title="恢复" href="javascript:;" onclick="member_del(this, {$v['id']})" class="ml-5" style="text-decoration:none"><i class="fa fa-remove"></i></a>
+                </td>
+            </tr>
+        </foreach> 
+        </tbody>
+    </table>
+        </div>
+        <ul class="pagination" style="margin-bottom:20px">{$btn}</ul>
+     <script> 
+        $('.pagination a').unwrap('div').wrap('<li></li>');
+        $('.pagination span').wrap('<li class="active"></li>');
+    </script>   
+    </div>
+    <script>
+function member_del(obj, id){
+    swal({
+        title: "您确定要" + obj.title + "吗",
+        text: "数据无价，请谨慎操作！",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: obj.title,
+        closeOnConfirm: false
+    }, function () {
+        var str = {'id':id};
+        $.post('__URL__/reverse', str, function(data){
+            if(data.status == 1)
+            {
+                $(obj).parents("tr").remove();
+                swal("操作成功！", "您已经" + obj.title + "。", "success");
+            }
+            else swal("操作失败！", "请稍后尝试！", "danger");
+         });  
+    });
+}
+</script>
+</block>

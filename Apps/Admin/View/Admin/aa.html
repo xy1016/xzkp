@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<include file="Public:header" />
+<style type="text/css">
+	td, th{
+		text-align: center;
+	}
+	.form-inline .form-group{
+		margin-bottom: 7px !important;
+	}
+</style>
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeIn">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="ibox">
+				<div class="ibox-title">
+					<button class="btn btn-primary btn-xs" onclick="location.reload()"><i class="fa fa-refresh"></i></button>
+				</div>
+				<div class="ibox-content">
+					<div class="clearfix">
+						<form class="form-inline pull-left m-r-xs" action="__APP__/Mail" method="get">
+						<span class="form-group">
+							<label>邮件标题:</label>
+							<input type="text" class="form-control" name="subject">
+						</span>
+							<span class="form-group">
+							<label>用户ID:</label>
+							<input type="text" class="form-control" name="user_id">
+						</span>
+							<span class="form-group">
+							<label>发送时间:</label>
+							<input type="text" class="form-control" name="stime">
+						</span>
+							<span class="form-group">
+							<label>游戏平台:</label>
+							<select name="platform_id" class="form-control">
+								<option value="">全部</option>
+								<volist name="platformlist" id="vo">
+									<option value="{$vo.platform_id}">{$vo.platform_name}</option>
+								</volist>
+
+							</select>
+						</span>
+							<span class="form-group">
+							<label>游戏平台:</label>
+							<select name="status" class="form-control">
+								<option value="">全部</option>
+									<option value="0">未读</option>
+									<option value="1">已读</option>
+									<option value="2">已读并提取</option>
+									<option value="3">已撤消</option>
+							</select>
+						</span>
+							<span class="form-group full-height">
+							<button id="searchBtn" type="submit" class="btn btn-primary"><i class="fa fa-search"></i> 查询</button>
+							</span>
+						</form>
+						<div class="form-inline pull-left">
+						<span class="form-group full-height">
+							<button type="button" class="btn btn-primary">发送邮件</button>&nbsp;&nbsp;&nbsp;&nbsp;
+						</span>
+
+							<span class="form-group">
+							<select id="kind_id" class="form-control">
+								<option value="">--选择同步游戏--</option>
+								<volist name="kindlist" id="vo">
+								 <option value="{$vo.kind_id}">{$vo.kind_name}</option>
+							 	</volist>
+							</select>
+							<button type="button" class="btn btn-primary">点击同步邮件私信到游戏服务器</button>&nbsp;&nbsp;&nbsp;&nbsp;
+						</span>
+						</div>
+					</div>
+
+					<div class="table-responsive">
+						<table class="table table-bordered table-hover">
+							<thead>
+							<tr>
+								<th>ID</th>
+								<th>接收用户ID（昵称）</th>
+								<th>发送用户</th>
+								<th>发送类型</th>
+								<th>游戏平台</th>
+								<th>主题</th>
+								<th>发送时间</th>
+								<th>操作人</th>
+								<th>状态</th>
+								<th>操作</th>
+							</tr>
+							</thead>
+							<tbody>
+							<volist name="list" id="vo">
+								<tr>
+								<td>{$vo.mail_id}</td>
+								<td>{$vo.receive_id}（{$vo.receive_id|get_user_nickname}）</td>
+								<td>{$vo.send_id|get_user_account}</td>
+								<td>{$vo.send_type|get_mail_send_type_name}</td>
+								<td>{$vo.platform_id|get_platform_name}</td>
+								<td>{$vo.subject}</td>
+								<td>{$vo.ctime|date="Y-m-d H:i:s",###}</td>
+								<td>{$vo.admin_id|get_admin_realname}</td>
+								<td>{$vo.status|get_mail_status_name}</td>
+								<td>
+									<div class="btn-group btn-group-xs">
+										<a class="btn btn-white" type="button" href="__APP__/Mail/edit/id/{$vo.mail_id}">编辑邮件</a>
+										<if condition="$vo.status eq 0">
+											<a href="javascript:void(0)" onclick="cancelMail({$vo.mail_id})" class="btn btn-white" type="button">撤消邮件</a>
+											<a href="javascript:void(0)" onclick="sycngame({$vo.mail_id})" class="btn btn-white" type="button">同步到游戏服务</a>
+										</if>
+									</div>
+								</td>
+								</tr>
+							</volist>
+							</tbody>
+						</table>
+					</div>
+					<!--分页-->
+					<nav class="text-center">{$page}</nav>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</body>

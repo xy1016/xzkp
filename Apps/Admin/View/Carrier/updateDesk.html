@@ -1,0 +1,103 @@
+<style>
+#modal_updateDesk .control-label{
+    font-weight: normal;padding-left:0;padding-right: 0;
+}
+</style>
+<div class="modal inmodal fade" id="modal_updateDesk" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form class="form-horizontal m-t" onsubmit="return false" id="carrier_game_set">
+                <input type="hidden" id="{$list['id']}">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">运营商游戏设定</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <div class="tabs-container">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true">游戏桌数设定</a>
+                                </li>
+                                <li class=""><a data-toggle="tab" href="#tab-2" aria-expanded="false">游戏预警设定</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div id="tab-1" class="tab-pane active">
+                                    <div class="panel-body">
+                                     <div style="padding-bottom:0.8em;font-size:12px"><span class="text-muted">(配置说明：游戏桌数量设定支持0~100之间）</span></div>
+                                        <notempty name="list['game']">
+                                        <foreach name="list.game" item="v">
+                                        <div style="margin-bottom:10px;">
+                                            <div class="form-group">
+                                                <div>
+                                                <label class="col-sm-2 control-label"> {$v['game_name']}</label>
+                                                    <label class="col-sm-2 control-label">练习厅桌数</label>
+                                                    <div class="col-sm-2" style="padding-left:5px">
+                                                        <input class="form-control input-sm" type="number" name="practise_desk" data-game="{$v['game_id']}" value="{$v['practise_desk']|default=0}" min="0" max="99">
+                                                    </div>
+                                                    <label class="col-sm-2 control-label">竞技厅桌数</label>
+                                                    <div class="col-sm-2">
+                                                        <input class="form-control input-sm" type="number" data-game="{$v['game_id']}" name="arena_desk" max="100" min="0" value="{$v['arena_desk']|default=0}" min="0" max="99">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </foreach>
+                                        <else/>该运营商还没有被授权任何游戏！
+                                        </notempty>
+                                    </div>
+                                </div>
+                                <div id="tab-2" class="tab-pane">
+                                    <div class="panel-body">
+                                        <notempty name="list['game']">
+                                        <foreach name="list.game" item="v">
+                                        <div style="margin-bottom:10px;">
+                                            <label class="col-sm-2 control-label"> {$v['game_name']}</label>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <label class="col-sm-2 control-label">充值预警</label>
+                                                    <div class="col-sm-2" style="padding-left:5px">
+                                                        <input class="form-control input-sm" data-game="{$v['game_id']}" type="number" name="charge_w" value="{$v['charge_w']|default=0}">
+                                                    </div>
+                                                    <label class="col-sm-2 control-label">日活预警</label>
+                                                    <div class="col-sm-2">
+                                                        <input class="form-control input-sm" type="number" data-game="{$v['game_id']}" name="daily_aw" max="100" min="0" value="{$v['daily_aw']|default=0}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </foreach>
+                                        <else/>该运营商还没有被授权任何游戏！
+                                        </notempty>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="result" style="text-align:center;font-weight:bold;margin:8px 0;"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+ <script>
+ var carrier_id = {$list['id']};
+ var flag = true;
+$(function(){
+    $("#modal_updateDesk input").on('input', function(){
+    if(flag == false) return false;
+    flag = false;
+    var aa = $(this).val();
+    aa = Math.min(aa, 100);
+    aa = Math.max(aa, 0);
+    $(this).val(aa);
+    var str = {"id":carrier_id, "game_id": $(this).data("game"), "column":$(this).attr("name"), "value":aa};
+    $.post("__URL__/updateDesk", str, function(data){
+        flag = true;
+    });
+});
+});
+ </script>

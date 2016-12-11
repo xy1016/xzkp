@@ -1,0 +1,162 @@
+<extend name="Public/layout" />
+<block name="cssFile">
+<link href="__ROOT__/Static/css/plugins/iCheck/custom.css" rel="stylesheet">
+</block>
+<block name="content">
+  <div class="ibox-title">
+    <button class="btn btn-primary btn-xs" onclick="location.reload()"><i class="fa fa-refresh"></i></button>
+  </div>
+<div class="ibox-content">
+    <div style="margin:10px 0"> <span class="l"><a data-toggle="modal" data-target="#myModal5" class="btn btn-success">添加用户</a></span></div>
+        <div class="row">
+         <form action="__URL__/index" method="post">
+            <div class="col-sm-3">
+                <div class="input-group">
+                    <input placeholder="请输入用户名|邮箱|手机号码" class="form-control" type="text" name="keywords"> <span class="input-group-btn">
+                    <button id="searchBtn" class="btn btn-primary"><i class="fa fa-search"></i> 查询</button>
+                </div>
+            </div>
+             </form>
+        </div>
+        <div class="table-responsive">
+        <table id="userTable" class="table table-border table-bordered table-hover table-bg table-sort" style="border-width:1px">
+        <thead>
+            <tr class="text-c">
+                <th width="100">图像</th>
+                <th width="100">用户名</th>
+                <th width="100">角色</th>
+                <th width="100">姓名</th>
+                <th width="90">手机</th>
+                <th width="150">邮箱</th>
+                <th width="130">加入时间</th>
+                <th width="70">状态</th>
+                <th width="70">注册IP</th>
+                <th width="100">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+        <foreach name="list" item="v">
+            <tr class="text-c">
+                <td>{$v['pic']|default=''}</td>
+                <td><u style="cursor:pointer" class="text-primary" onclick="member_show({$v['id']},'member-show.html','10001','360','400')">{$v['username']}</u></td>
+                 <td>{$v['role']}</td>
+                 <td>{$v['name']}</td>
+                 <td>{$v['phone']}</td>
+                 <td>{$v['email']}</td>
+                 <td>{$v['addtime']}</td>
+                 <td class="td-status"><span class="label <if condition="($v['status'] eq '已启用')">label-success<else />label-default</if> radius">{$v['status']}</span></td>
+                 <td>{$v['reg_ip']}</td>
+                 <style>
+                    .td-manage a{margin-right:5px;}
+                 </style>
+                <td class="td-manage">
+                <if condition="($v['status'] eq '已启用')"><a style="text-decoration:none;" onClick="member_stop(this, {$v['id']})" href="javascript:;" title="停用该账户"><i class="fa fa-ban"></i></a> <else /><a style="text-decoration:none" onClick="member_start(this, {$v['id']})" href="javascript:;" title="启用该账户"><i class="fa fa-check"></i></a></if>
+                <a title="编辑" href="javascript:;" onClick="fillModal({$v['id']})" style="text-decoration:none"><i class="fa fa-edit"></i></a> <a style="text-decoration:none" class="ml-5" onClick="change_password(this, {$v['id']})" href="javascript:;" title="修改密码"><i class="fa fa-key"></i></a> 
+                <a title="删除" href="javascript:;" onclick="member_del(this, {$v['id']})" class="ml-5" style="text-decoration:none"><i class="fa fa-remove"></i></a></td>
+            </tr>
+        </foreach> 
+        </tbody>
+    </table>
+        </div>
+        <ul class="pagination" style="margin-bottom:20px">{$btn}</ul>
+     <script> 
+        $('.pagination a').unwrap('div').wrap('<li></li>');
+        $('.pagination span').wrap('<li class="active"></li>');
+    </script>   
+    </div>
+    <script>
+function fillModal(id)
+{   
+    var str={"id":id};
+    $.post("__URL__/getData", str, function(data){
+        if(data.status == undefined){
+            for(var k in data){
+                $("#myModal_Update input[name=" + k + "]").val(data[k]);
+            }
+        }
+    })
+    $("#myModal_Update").modal('show');
+    $("#myModal_Update").find(".result").html('').end().find("input:not([type*=hidden])").next().children().remove();
+}
+function member_del(obj, id){
+    swal({
+        title: "您确定要" + obj.title + "吗",
+        text: "数据无价，请谨慎操作！",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: obj.title,
+        closeOnConfirm: false
+    }, function () {
+        var str = {"id":id, "isdelete":1};
+        $.post('__URL__/reverse', str, function(data){
+            if(data.status == 1)
+            {
+                $(obj).parents("tr").remove();
+                swal("操作成功！", "您已经" + obj.title + "。", "success");
+            }
+            else swal("操作失败！", "请稍后尝试！", "danger");
+         });  
+    });
+}
+
+function member_stop(obj, id){
+    swal({
+        title: "您确定要" + obj.title + "吗",
+        text: "数据无价，请谨慎操作！",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: obj.title,
+        closeOnConfirm: false
+    }, function () {
+        var str = {'id':id, 'status':0}
+        $.post('__URL__/updateStatus', str, function(data){
+            if(data.status == 1)
+            {
+                $(obj).parents("tr").find(".td-status").html('<span class="label label-default radius">已停用</span>');
+                $(obj).replaceWith('<a style="text-decoration:none" onClick="member_start(this, ' + id + ')" href="javascript:;" title="启用该账户"><i class="fa fa-check"></i></a>');
+                swal("操作成功！", "您已经" + obj.title + "。", "success");
+            }
+            else swal("操作失败！", "请稍后尝试！", "danger");
+         });  
+    });
+}
+
+function member_start(obj, id){
+    swal({
+        title: "您确定要" + obj.title + "吗",
+        text: "数据无价，请谨慎操作！",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: obj.title,
+        closeOnConfirm: false
+    }, function () {
+        var str = {'id':id, 'status':1}
+        $.post('__URL__/updateStatus', str, function(data){
+            if(data.status == 1)
+            {
+                $(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已启用</span>');
+                $(obj).replaceWith('<a style="text-decoration:none" onClick="member_stop(this, ' + id + ')" href="javascript:;" title="停用该账户"><i class="fa fa-ban"></i></a>');
+                swal("操作成功！", "您已经" + obj.title + "。", "success");
+            }
+            else swal("操作失败！", "请稍后尝试！", "danger");
+         });  
+    });
+}
+
+function change_password(obj, id)
+{
+    $("#update_pwd .pwdResult").html('');
+    $("#update_pwd input:not([name='id'])").next().html('');
+    $("#update_pwd input[name='username']").val($(obj).parents("tr").find(".text-primary").text());
+    $("<input name='id' type='hidden' value='" + id + "'>").prependTo("#update_pwd form");
+    $("#update_pwd").modal('show');
+}
+</script>
+     <!-- 引入编辑管理员表单 -->
+    <include file="create" />
+    <include file="update" /> 
+    <include file="change_password" />        
+</block>

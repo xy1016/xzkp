@@ -1,0 +1,98 @@
+<extend name="Public/layout" />
+<block name="cssFile">
+<link href="__ROOT__/Static/css/plugins/iCheck/custom.css" rel="stylesheet">
+</block>
+<block name="content">
+  <div class="ibox-title">
+    <button class="btn btn-primary btn-xs" onclick="location.reload()"><i class="fa fa-refresh"></i></button>
+  </div>
+<div class="ibox-content">
+    <div style="margin:10px 0"> <span class="l"><a data-toggle="modal" data-target="#modal_create" class="btn btn-success">添加游戏</a></span></div>
+        <div class="row">
+         <form action="__URL__/index" method="post">
+            <div class="col-sm-3">
+                <div class="input-group">
+                    <input placeholder="请输入游戏名" class="form-control" type="text" name="keywords"> <span class="input-group-btn">
+                    <button id="searchBtn" class="btn btn-primary"><i class="fa fa-search"></i> 查询</button>
+                </div>
+            </div>
+             </form>
+        </div>
+        <div class="table-responsive">
+        <table id="dataTable" class="table table-border table-bordered table-hover table-bg table-sort" style="border-width:1px">
+        <thead>
+            <tr class="text-c">
+                <th>ID</th>
+                <th>游戏名</th>
+                <th>描述</th>
+                <th>添加时间</th>
+                <th>添加IP地址</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+        <foreach name="list" item="v">
+            <tr class="text-c">
+                <td>{$v['id']}</td>
+                <td>{$v['game_name']}</td>
+                 <td>{$v['desc']}</td>
+                 <td>{$v['addtime']}</td>
+                 <td>{$v['reg_ip']}</td>
+                 <style>
+                    .td-manage a{margin-right:5px;}
+                 </style>
+                <td class="td-manage">
+                <button onClick="fillModal({$v['id']})" class="btn btn-info " type="button"><i class="fa fa-paste"></i> 编辑</button>
+                <button onClick="del(this, {$v['id']})" class="btn btn-danger " type="button"><i class="fa fa-close"></i> 删除</button>
+                </td>
+            </tr>
+        </foreach> 
+        </tbody>
+    </table>
+        </div>
+        <ul class="pagination" style="margin-bottom:20px">{$btn}</ul>
+     <script> 
+        $('.pagination a').unwrap('div').wrap('<li></li>');
+        $('.pagination span').wrap('<li class="active"></li>');
+    </script>   
+    </div>
+<script>
+function fillModal(id)
+{   
+    var str={"id":id};
+    $.post("__URL__/getData", str, function(data){
+        if(data.status == undefined){
+            for(var k in data){
+                $("#modal_update input[name=" + k + "]").val(data[k]);
+            }
+        }
+    })
+    $("#modal_update").modal('show');
+    $("#modal_update").find(".result").html('').end().find("input:not([type*=hidden])").next().children().remove();
+}
+function del(obj, id){
+    swal({
+        title: "您确定要" + obj.title + "吗",
+        text: "数据无价，请谨慎操作！",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: obj.title,
+        closeOnConfirm: false
+    }, function () {
+        var str = {"id":id, "isdelete":1};
+        $.post('__URL__/reverse', str, function(data){
+            if(data.status == 1)
+            {
+                $(obj).parents("tr").remove();
+                swal("操作成功！", "您已经" + obj.title + "。", "success");
+            }
+            else swal("操作失败！", "请稍后尝试！", "danger");
+         });  
+    });
+}
+</script>
+     <!-- 引入操作表单 -->
+    <include file="create" />
+    <include file="update" /> 
+</block>
