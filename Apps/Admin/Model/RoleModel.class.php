@@ -55,7 +55,6 @@ class RoleModel extends \Think\Model\RelationModel
             }
             $list[] = $collect;
          }
-         dump($list[0]);
         return ['list' => $list];
     } 
 

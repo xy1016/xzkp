@@ -37,14 +37,14 @@
                 <foreach name="list" item="row">
                   <div class="checkbox moduleCheckBox">
                       <label>
-                          <input type="checkbox"> 模块：{$row.module.remark}</label>
+                          <input type="checkbox"> 全选</label>
                   </div>
-                  <foreach name="row.controller" item="contr">
+                  <foreach name="row" item="contr">
                        <div class="checkbox" style="margin-left:2em">
-                          <label class="checkbox contrCheckBox"><input type="checkbox"> {$contr.con.remark}</label>
+                          <label class="checkbox contrCheckBox"><input type="checkbox" value="{$contr.con.id}" name="permission2[]"> {$contr.con.remark}</label>
                          <?php foreach($contr['action'] as $act): ?>
                           <label class="checkbox-inline myaction">
-                                <input type="checkbox" value="{$act['id']}" id="inlineCheckbox2" name="permission[]"> {$act['remark']}
+                                <input type="checkbox" value="{$act['id']}" id="inlineCheckbox2" name="permission3[]"> {$act['remark']}
                           </label>
                          <?php endforeach;?>
                       </div>
@@ -68,10 +68,10 @@
 $(function(){
     $(".i-checks").iCheck({checkboxClass:"icheckbox_square-green",radioClass:"iradio_square-green",});
     $(".moduleCheckBox input[type=checkbox]").on('ifChecked', function(){
-      $(this).parents(".moduleCheckBox").nextUntil(".moduleCheckBox").find("input[type=checkbox]").andSelf().iCheck("check");
+      $(this).parents(".moduleCheckBox").nextAll().find("input[type=checkbox]").andSelf().iCheck("check");
     });
     $(".moduleCheckBox input[type=checkbox]").on('ifUnchecked', function(){
-      $(this).parents(".moduleCheckBox").nextUntil(".moduleCheckBox").find("input[type=checkbox]").andSelf().iCheck("uncheck");
+      $(this).parents(".moduleCheckBox").nextAll().find("input[type=checkbox]").andSelf().iCheck("uncheck");
     });
 });
 </script>
