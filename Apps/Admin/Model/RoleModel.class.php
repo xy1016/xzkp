@@ -56,6 +56,31 @@ class RoleModel extends \Think\Model\RelationModel
         return ['list' => $list];
     } 
 
+    public function saveByRoleID($id)
+    {
+        //保存角色的子权限
+        $post = I('post.');
+        if(count($post['permission3']) > 0)
+        {
+            for($i = 3; $i >= 1; $i--)
+            {
+                foreach(array_values($post['permission'.$i]) as $node)
+                {
+                    $data['node_id'] = $node;
+                    $data['role_id'] = $id;
+                    $data['level'] = $i;
+                    $dataList[] = $data;
+                }
+            }
+            //批量添加到数据库
+            if(!$this->table(__ROLE_NODE__)->field(['node_id', 'role_id', 'level'])->addAll($dataList))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public function findByID($id)
     {   
         $res = $this->getData();

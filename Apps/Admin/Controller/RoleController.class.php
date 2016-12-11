@@ -19,37 +19,19 @@ class RoleController extends CommonController {
             $this->assign($res);
             $this->display();
         }
-      elseif(intval($id) > 0){   //处理表单提交的修改数据
-         $this->validatePost();
-         if(count($_POST['permission3']) < 1) $this->ajaxReturn(['status' => 0]);
-         $role['name'] = I('post.name');
-         $role['remark'] = I('post.remark');
-         // $this->model->startTrans(); //开启事务处理
-         $this->model->where(['id' => $id])->save($role); //先修改role表
-         //处理 role_node表
-         //删除旧的$node
-         $this->model->table(__ROLE_NODE__)->where(['role_id' => $id])->delete();
-         if(1)
-         {
-            for($i = 3; $i >=0; $i--)
+        elseif(IS_POST && IS_AJAX)
+        {   //处理表单提交的修改数据
+            $role['name'] = I('post.name');
+            $role['remark'] = I('post.remark');
+            $this->model->where(['id' => $id])->save($role); //先修改role表
+            if(false !== $this->model->table(__ROLE_NODE__)->where(['role_id' => $id])->delete())
             {
-               foreach(array_values($_POST['permission'.$i]) as $node)
-               {
-                  $data['node_id'] = $node;
-                  $data['role_id'] = $id;
-                  $data['level'] = $i;
-                  $dataList[] = $data;
-               }
+                if($this->model->saveByRoleID($id))
+                    $this->ajaxReturn(['status' => 1]);
             }
-            if($this->model->table(__ROLE_NODE__)->field(['node_id', 'role_id', 'level'])->addAll($dataList))
-                  $this->ajaxReturn(['status' => 1]);
-            else
-            {
-               $error[] = ['ele' => 'remark', 'error' => '写入数据失败, 请等候更佳的网络连接'];
-               $this->ajaxReturn(['status' => 0, 'error' =>$error]);
-            }
-         }
-      }
+            $error[] = ['ele' => 'remark', 'error' => '写入数据失败, 请等候更佳的网络连接'];
+            $this->ajaxReturn(['status' => 0, 'error' =>$error]);
+        }
     }
 
    //找到该角色下的权限节点
@@ -72,30 +54,10 @@ class RoleController extends CommonController {
             $post = I('post.');
             $role['name'] = $post['name'];
             $role['remark'] = $post['remark'];
-            $id = $this->model->add($role);
-            if(!$id)  //如果role表写入失败, 返回失败
+            if($id = $this->model->add($role))
             {
-                $error[] = ['ele' => 'remark', 'error' => '写入数据失败, 请等候更佳的网络连接'];
-                $this->ajaxReturn(['status' => 0, 'error' =>$error]);
-            }
-            //保存权限id
-            if(count($post['permission3']) > 0)
-            {
-                for($i = 3; $i >= 1; $i--)
-                {
-                    foreach(array_values($_POST['permission'.$i]) as $node)
-                    {
-                      $data['node_id'] = $node;
-                      $data['role_id'] = $id;
-                      $data['level'] = $i;
-                      $dataList[] = $data;
-                    }
-                }
-                //批量添加到数据库
-                if($this->model->table(__ROLE_NODE__)->field(['node_id', 'role_id', 'level'])->addAll($dataList))
-                {
-                    $this->ajaxReturn(['status' => 1]);
-                }
+                if($this->model->saveByRoleID($id))
+                    $this->ajaxReturn(['status' => 1]);   
             }
             $error[] = ['ele' => 'remark', 'error' => '写入数据失败, 请等候更佳的网络连接!'];
             $this->ajaxReturn(['status' => 0, 'error' =>$error]);
@@ -111,27 +73,30 @@ class RoleController extends CommonController {
       $this->ajaxReturn(['status' =>1, 'data' => $res]);
    }
 
-   public function del($id) //删除角色表中的角色
-   {
-      $this->model->startTrans();
-      $count = 0;
-      $flag = true;
-      if(!$this->model->table(__ROLE__)->where(['id' => $id])->delete()) $flag = false;
-      if(!$this->model->table(__ROLE_NODE__)->where(['role_id' => $id])->delete()) $flag = false;
-      if($this->model->table(__ROLE_USER__)->find($id)) //确认该角色下是否有用户
-      {
+    public function del($id) //删除角色表中的角色
+    {
+        $this->model->startTrans();
+        $count = 0;
+        $flag = true;
+        if(!$this->model->table(__ROLE__)->where(['id' => $id])->delete())
+        {
+            $flag = false;
+        } 
+        if(!$this->model->table(__ROLE_NODE__)->where(['role_id' => $id])->delete()) $flag = false;
+        if($this->model->table(__ROLE_USER__)->find($id)) //确认该角色下是否有用户
+        {
          if(!$this->model->table(__ROLE_USER__)->where(['role_id' => $id])->delete())
             $flag = false;
-      }
-      if(!flag)
-      {
+        }
+        if(!flag)
+        {
          $this->model->rollback;
-         $this->ajaxReturn(['status' => 0]);
-      }
-      //如果flag还为true 说明删除都成功
-      $this->model->commit();
-      $this->ajaxReturn(['status' => 1]);
-   }
+         $this->ajaxReturn(['status' => 0, 'error' => '请稍候尝试!']);
+        }
+        //如果flag还为true 说明删除都成功
+        $this->model->commit();
+        $this->ajaxReturn(['status' => 1]);
+    }
 
    public function test()
    {    

@@ -73,5 +73,12 @@ $(function(){
     $(".moduleCheckBox input[type=checkbox]").on('ifUnchecked', function(){
       $(this).parents(".moduleCheckBox").nextAll().find("input[type=checkbox]").andSelf().iCheck("uncheck");
     });
+    //cont
+     $(".contrCheckBox input[type=checkbox]").on('ifChecked', function(){
+      $(this).parents(".contrCheckBox").nextUntil(".contrCheckBox").find("input[type=checkbox]").andSelf().iCheck("check");
+    });
+    $(".contrCheckBox input[type=checkbox]").on('ifUnchecked', function(){
+      $(this).parents(".contrCheckBox").nextUntil(".contrCheckBox").find("input[type=checkbox]").andSelf().iCheck("uncheck");
+    });
 });
 </script>

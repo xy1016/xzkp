@@ -10,7 +10,7 @@
     <div style="margin:10px 0">
         <span class="l"><a onclick="showModal('__URL__/create', 'modal_create')" class="btn btn-success">添加角色</a></span>
          <span class="l"><a onclick="showModal('__URL__/update', 'modal_update')" class="btn btn-warning">修改角色</a></span>
-        <span class="l"><a onclick="" class="btn btn-danger">删除角色</a></span>
+        <span class="l"><a onclick="del()" class="btn btn-danger">删除角色</a></span>
     </div>
         <div>
         <table id="dataTable" class="table table-border table-bordered table-hover table-bg table-sort" style="border-width:1px">
@@ -52,6 +52,30 @@ function showModal(url, modalID){
         $("#" + modalID).modal('show');
         $.getScript("__ROOT__/Static/js/content.min.js?v=1.0.0", function() {});
     })
+}
+
+function del()
+{
+    var id = $(".idColumn input:checked").val();
+     swal({
+        title: "您确定要删除该角色吗",
+        text: "用户绑定的角色权限会相应移除",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: '删除角色',
+        closeOnConfirm: false
+    }, function () {
+        var str = {"id":id};
+        $.post('__URL__/del', str, function(data){
+            if(data.status == 1)
+            {
+                swal("操作成功！", "您已经删除选定角色", "success");
+                location.reload();
+            }
+            else swal("操作失败！", data.error, "danger");
+         });  
+    });
 }
 
 $(function(){
