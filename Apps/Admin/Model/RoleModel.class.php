@@ -37,24 +37,25 @@ class RoleModel extends \Think\Model\RelationModel
     {
          $map['status'] = 1;
          $map['level'] = 1;
-         $modules = $this->table(__NODE__)->where($map)->field(['id','remark'])->select();
-         foreach($modules as $module)
+         //找出模块数量, 本项目暂时只有一个模
+         $model = M('node');
+         $ids = $model->where($map)->getField('id', true);
+         foreach($ids as $id)
          {
-            $collect['module'] = $module;
-            $map['pid'] = $module['id'];
+            $map['pid'] = $id;
             $map['level'] = 2;
-            $controllers = $this->field(['id','remark'])->table(__NODE__)->where($map)->select();
+            $controllers = $model->field(['id','remark'])->where($map)->select();
             $map['level'] = 3;
-            unset($collect['controller']);
+            // unset($collect['controller']);
             foreach($controllers as $controller)
             {
                 $map['pid'] = $controller['id'];
-                $actions = $this->field(['id','remark'])->table(__NODE__)->where($map)->select();
-                $collect['controller'][] = ['con' => $controller, 'action' => $actions];
+                $actions = $model->field(['id','remark'])->where($map)->select();
+                $collect[] = ['con' => $controller, 'action' => $actions];
             }
             $list[] = $collect;
          }
-         dump($list[0]['controller']);
+         dump($list[0]);
         return ['list' => $list];
     } 
 
