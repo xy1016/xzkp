@@ -27,8 +27,8 @@ class NodeModel extends \Think\Model
     public function queryPage()
     {	
         $map['status'] = 1;
+        $map['level'] = ['gt' ,1];
         //显示具体节点就行
-        // $map['level'] = 2;
     	$pagination = getPage($this, $map);
     	$btn = $pagination->show();
     	$list = $this->order('id asc')->where($map)->select();

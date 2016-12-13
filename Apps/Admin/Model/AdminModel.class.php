@@ -78,16 +78,6 @@ class AdminModel extends CommonModel
         }
         return ['btn' => $btn, 'list' => $list, 'count' => $count, 'status' => 1];
     }
-
-    protected function getRoleRemark($id)
-    {
-       return $this->table(__ROLE__)->where(['id' => $id])->getField('remark');
-    }
-
-    public function getRoles()
-    {
-       return $this->table(__ROLE__)->where(['status' => 1])->field(['id','remark'])->select();
-    }
     
     /**
      * [checkName 检查是否存在该用户名]
@@ -128,11 +118,37 @@ class AdminModel extends CommonModel
         {   
             if(password_verify(I('post.pwd'), $row['pwd']))
             {   
-                // $row['role'] = $this->where(['id' => $row['role_id']])->table(__ROLE__)->getField('remark');
+                session('node', null); //先删除同PHPSESESSION下可能存在的其他账户信息
+                unset($row['pwd']); //密码不存入session
                 session('mi_game_admin', $row);
-             /*   if(!empty($nodeNames = $this->getMyActions($row['role_id'])))
-                session('node', $nodeNames);*/
+                //存储该用户的权限信息
+                if($nodeNames = $this->getMyActions($row['role_id']))
+                    session('node', $nodeNames);
+             /*   dump($nodeNames);
+                dump(session('node'));die;*/
                 return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * [getMyActions 获取当前角色的所有权限节点名]
+     * @param  [int] $roleID [角色id]
+     * @return [array]         [节点名组成的数组]
+     */
+    public function getMyActions($roleID)
+    {   
+        if(!empty($roleID))
+        {
+            $nodeIDs = M('role_node')->where(['role_id' => $roleID])->getField('node_id', true);
+            if(count($nodeIDs > 0))
+            {
+                $nodeIDs = join(',', $nodeIDs);
+                $map['id'] = ['in', $nodeIDs];
+                $map['level'] = 3;
+                if($res = M('node')->where($map)->getField('name', true))
+                    return $res;
             }
         }
         return false;
@@ -161,4 +177,13 @@ class AdminModel extends CommonModel
         }
         return true;
     }
+
+    protected function getRoleRemark($id)
+    {
+        /*if($roleID = M('role_user')->where(['user' => $id])->getField('role_id'))
+        {
+            $roleName = M('role')->where(['id' => $roleID])
+        }*/
+    }
+
 }

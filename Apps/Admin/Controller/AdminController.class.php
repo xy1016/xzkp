@@ -157,7 +157,7 @@ class AdminController extends CommonController
         {
             if($this->model->validate_login())
             {   
-              $this->ajaxReturn(['status' => 1]);
+                $this->ajaxReturn(['status' => 1]);
             }
             else  $this->ajaxReturn(['status' => 0, 'info' => current($this->model->getError())]);
         }
@@ -182,9 +182,7 @@ class AdminController extends CommonController
      */
     public function logout()
     {
-        session('mi_game_admin', null);
-        // session('node', null);
-        // $this->redirect('Login/login');
+        session('[destroy]'); 
         echo "<script>window.open('".U('Admin/Admin/login')."', '_top')</script>";
     }
 }

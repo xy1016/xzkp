@@ -59,7 +59,7 @@ class RoleModel extends CommonModel
         $post = I('post.');
         if(count($post['permission3']) > 0)
         {
-            for($i = 2; $i >= 1; $i--)
+            for($i = 3; $i >= 2; $i--)
             {
                 foreach(array_values($post['permission'.$i]) as $node)
                 {

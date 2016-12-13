@@ -7,8 +7,20 @@ class CommonController extends Controller {
     public function _initialize()
     {
         //检测是否是登录操作， 不是则验证登录状态
-      if(!session('mi_game_admin') && ACTION_NAME != 'login')
-        $this->redirect('Admin/Admin/login');
+        if(!session('mi_game_admin') && ACTION_NAME != 'login')
+        {
+            $this->redirect('Admin/Admin/login');
+            exit;
+        }
+        else if(ACTION_NAME != 'login' && ACTION_NAME != 'logout')
+        {
+            //权限判断, 任何方法都要有write权限
+            $node = MODULE_NAME.'/'.CONTROLLER_NAME.'/read';
+            //一些特殊节点另外定义了权限
+            $specialNode = MODULE_NAME.'/'.CONTROLLER_NAME.'/'.ACTION_NAME;
+            if(session('mi_game_admin.id') != 1 && !in_array($node, session('node')) && !in_array($specialNode, session('node')))
+                $this->error('您权限不足', U('Admin/Index/welcome'));
+        }
     }
 
     public function __construct()

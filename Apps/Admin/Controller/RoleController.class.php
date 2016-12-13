@@ -24,7 +24,7 @@ class RoleController extends CommonController {
             $role['name'] = I('post.name');
             $role['remark'] = I('post.remark');
             $this->model->where(['id' => $id])->save($role); //先修改role表
-            if(false !== $this->model->table(__ROLE_NODE__)->where(['role_id' => $id])->delete())
+            if(false !== M('role_node')->where(['role_id' => $id])->delete())
             {
                 if($this->model->saveByRoleID($id))
                     $this->ajaxReturn(['status' => 1]);
