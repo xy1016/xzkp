@@ -13,14 +13,26 @@ class CommonController extends Controller {
             $this->redirect('Admin/Admin/login');
             exit;
         }
-        else if(!in_array(ACTION_NAME, $whitelist))
+        $specialNode = MODULE_NAME.'/'.CONTROLLER_NAME.'/'.ACTION_NAME;
+        //权限判断, 任何方法都检查是否有读的权限
+        if(IS_GET && !in_array(ACTION_NAME, $whitelist))
         {
-            //权限判断, 任何方法都检查是否有读的权限
             $node = MODULE_NAME.'/'.CONTROLLER_NAME.'/read';
             //一些特殊节点另外定义了权限
-            $specialNode = MODULE_NAME.'/'.CONTROLLER_NAME.'/'.ACTION_NAME;
             if(session('mi_game_admin.id') != 1 && !in_array($node, session('node')) && !in_array($specialNode, session('node')))
                 $this->error('您权限不足', U('Admin/Index/welcome'));
+        }
+        //判断有没有写的权限
+        if(IS_POST && !empty($action = substr(ACTION_NAME, 0, 6)))
+        {
+            $whitelist = ['create', 'update'];
+            if(in_array($action, $whitelist))
+            {
+                 $node = MODULE_NAME.'/'.CONTROLLER_NAME.'/write';
+                //一些特殊节点另外定义了权限
+                if(session('mi_game_admin.id') != 1 && !in_array($node, session('node')) && !in_array($specialNode, session('node')))
+                $this->error('您权限不足', U('Admin/Index/welcome'));
+            }
         }
     }
 
