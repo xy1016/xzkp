@@ -15,7 +15,7 @@ class CommonController extends Controller {
         }
         else if(!in_array(ACTION_NAME, $whitelist))
         {
-            //权限判断, 任何方法都要有write权限
+            //权限判断, 任何方法都检查是否有读的权限
             $node = MODULE_NAME.'/'.CONTROLLER_NAME.'/read';
             //一些特殊节点另外定义了权限
             $specialNode = MODULE_NAME.'/'.CONTROLLER_NAME.'/'.ACTION_NAME;

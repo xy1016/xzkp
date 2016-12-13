@@ -11,7 +11,8 @@ class CommonModel extends \Think\Model
     //$data 模型数据 $options 表达式 
     //action 1添加 2修改 3删除
     protected function _after_insert($data, $options) 
-    {
+    {   
+        //先检查权限
         if($options['table'] == 'sys_log') return false;
             $this->filterData($data);
         if(!empty($id = $this->getLastInsID()))
