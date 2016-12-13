@@ -11,10 +11,10 @@ return array(
 	'URL_MODEL' => 2,
 				
 	'DB_TYPE' => 'mysql',
-	'DB_HOST' => 'localhost',
+	'DB_HOST' => '192.168.3.2',
 	'DB_NAME' => 'xzkpmonit',
 	'DB_USER' => 'root',
-	'DB_PWD' => '',
+	'DB_PWD' => 'root',
 	'DB_PORT' => 3306,
 	'DB_PREFIX' => '',
 	'DB_CHARSET' => 'utf8',
