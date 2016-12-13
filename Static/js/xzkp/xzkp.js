@@ -27,7 +27,6 @@ function postData(obj, url, str) {
         if (data.status == 1) {
             showResult(obj, 1);
             $(obj).find(".fa-info-circle").remove();
-            // parent.location.reload();
         } else if(data.error != undefined) {
             var res = data.error;
             for (var i = 0; i < res.length; i++) {

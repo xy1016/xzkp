@@ -1,0 +1,52 @@
+﻿<style>
+.myaction{
+  color:orange;
+}
+.myaction:nth-of-type(2){
+  margin-left:2em;
+}
+</style>
+<div class="modal inmodal fade" id="modal_allocate" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <form class="form-horizontal m-t" action="__URL__/allocate" autocomplete="off">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title">角色分配</h4>
+        </div>
+        <div class="modal-body">
+		    <div class="form-group">
+        <label class="col-sm-3 control-label">选择用户：</label>
+		        <div class="col-sm-8 i-checks">
+              <select class="form-control m-b input-md" name="user_id">
+                <option value="">用户列表</option>
+                  <foreach name="list" item="v">
+                      <option value="{$v.id}">{$v.username}</option>
+                  </foreach>
+              </select>
+              <span class="help-block m-b-none"></span>
+		        </div>
+		    </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">绑定角色：</label>
+            <div class="col-sm-8 i-checks">
+              <select class="form-control m-b input-md" name="role_id">
+                  <option value="abc">角色列表</option>
+                  <foreach name="role" item="r">
+                      <option value="{$r.id}">{$r.name}</option>
+                  </foreach>
+              </select>
+              <span class="help-block m-b-none"></span>
+            </div>
+        </div>
+      </div>
+        <div class="result" style="text-align:center;font-weight:bold;margin:8px 0;"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+          <button type="submit" class="btn btn-primary" id="submitButton">保存</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script src="__ROOT__/Static/js/xzkp/xzkp.js"></script>

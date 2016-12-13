@@ -1,6 +1,6 @@
 <?php
 namespace Admin\Model;
-class RoleModel extends \Think\Model\RelationModel
+class RoleModel extends CommonModel
 {   
     protected $patchValidate = true;
     protected $_validate = [
@@ -11,23 +11,20 @@ class RoleModel extends \Think\Model\RelationModel
         // ['pid','require','请至少选择一个权限',1,'',3], 
     ];
 
-    protected $_link = [
-        'admin' => [    //admin目标表表名
-            'mapping_type'  => self::MANY_TO_MANY,
-            // 'mapping_name'  => 'username',       //目标表表名跟当前模型的字段有冲突的时候使用 
-            'mapping_fields' => 'username',         //限定要查询的目标表的字段,默认查出所有字段
-            'foreign_key'   => 'role_id',           //中间表中自己这个模型的外键
-            'relation_foreign_key' => 'user_id',    //目标表的外键
-            'relation_table' => 'shop_role_user',   //中间表表名
-        ],
-    ];
-
-
+    /**
+     * [queryPage 查询角色列表， 同时查处每个角色下所有的用户]
+     * @return [array] [返回角色信息数组]
+     */
     public function queryPage()
     {   
         $pagination = getPage($this);
         $btn = $pagination->show();
         $list = $this->order('id desc')->field(['id', 'remark', 'name'])->select();
+        $model = M('role_user');
+        foreach($list as $key => $value)
+        {
+            $list[$key]['myuser'] = $model->alias('a')->field('b.username')->where(['role_id' => $value['id']])->join('join __ADMIN__ b on a.user_id = b.id')->select();
+        }
         return ['btn' => $btn, 'list' => $list];
     }
 
@@ -62,7 +59,7 @@ class RoleModel extends \Think\Model\RelationModel
         $post = I('post.');
         if(count($post['permission3']) > 0)
         {
-            for($i = 3; $i >= 1; $i--)
+            for($i = 2; $i >= 1; $i--)
             {
                 foreach(array_values($post['permission'.$i]) as $node)
                 {
@@ -73,7 +70,7 @@ class RoleModel extends \Think\Model\RelationModel
                 }
             }
             //批量添加到数据库
-            if(!$this->table(__ROLE_NODE__)->field(['node_id', 'role_id', 'level'])->addAll($dataList))
+            if(!M('role_node')->addAll($dataList))
             {
                 return false;
             }

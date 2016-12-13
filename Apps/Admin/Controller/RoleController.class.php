@@ -35,11 +35,11 @@ class RoleController extends CommonController {
     }
 
    //找到该角色下的权限节点
-   public function own_role($id)
-   {
-      $res = M('role_node')->where(['role_id' => $id])->getField('node_id', true);
-      $this->ajaxReturn(['status' => 1, 'res' => $res]);
-   }
+    public function own_role($id)
+    {
+        $res = M('role_node')->where(['role_id' => $id])->getField('node_id', true);
+        $this->ajaxReturn(['status' => 1, 'res' => $res]);
+    }
 
     public function create()
     {  
@@ -64,6 +64,39 @@ class RoleController extends CommonController {
         }
     }
 
+    /**
+     * [allocate 给用户分配角色， 超管不在此列表]
+     * @return [json] [y or n]
+     */
+    public function allocate()
+    {
+        if(IS_GET && IS_AJAX)
+        {
+            $list['role'] = $this->model->field(['id', 'name'])->select();
+            $map['status'] = 1;
+            $map['isdelete'] = 0;
+            $map['id'] = ['gt', 1];
+            $list['list'] = M('admin')->field('id, username')->where($map)->select();
+            $this->assign($list);
+            $this->display(); 
+        }
+        else if(IS_POST && IS_AJAX)
+        {   
+            $post = I('post.');
+            foreach($post as $key => $value)
+            {
+                if(empty($value))
+                    $error[] = ['ele' => $key, 'error' => '不能为空'];
+            }
+            if(count($error) > 0) $this->ajaxReturn(['status' => 0, 'error' => $error]);
+            $model = M('role_user');
+            if($model->where(['user_id' => $post['user_id']])->count())
+                $model->data($post)->save();
+            else $model->add($post);
+            $this->ajaxReturn(['status' => 1]);
+        }
+    }
+/*  
    public function get_action($id)
    {  
       $map['level'] = 3;
@@ -71,9 +104,14 @@ class RoleController extends CommonController {
       $map['status'] = 1;
       if($res = $this->model->field(['id','remark'])->table(__NODE__)->where($map)->select())
       $this->ajaxReturn(['status' =>1, 'data' => $res]);
-   }
+   }*/
 
-    public function del($id) //删除角色表中的角色
+    /**
+     * [del 删除角色, 同时删除绑定该角色跟用户的绑定关系]
+     * @param  [int] $id [角色id]
+     * @return [json]     [y or n]
+     */
+    public function del($id) 
     {
         $this->model->startTrans();
         $count = 0;

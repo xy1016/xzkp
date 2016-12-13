@@ -45,9 +45,9 @@ class AnalysizeModel extends \Think\Model
         $list = $this->alias('a')->order('b.id asc')->field('a.income, a.active_users, a.arpu, a.orders, b.name, b.id')->join('join __CARRIER__ b on a.carrier_id = b.id')->where($map)->select();
         if(count($list) == 0) $list = null;
         unset($map['updated_time']);
-        $sum = $this->order('updated_time asc')->field('updated_time, sum(income) as total_income')->where($map)->group('updated_time')->limit(30)->select();
+        $sum = $this->order('updated_time asc')->field('updated_time, sum(income) as total_income')->where($map)->group('updated_time')->limit(14)->select();
         //数据整理下再输出到前端
-        $chartTitle = (count($list) > 1) ? '运营商最近30天营收图':$list[0]['name'].'最近30天营收图';
+        $chartTitle = (count($list) > 1) ? '运营商最近14天营收图':$list[0]['name'].'最近30天营收图';
         foreach($sum as $value)
         {     
             $arr['total_income'][] = $value['total_income'];

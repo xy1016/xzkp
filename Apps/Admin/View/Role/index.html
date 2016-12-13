@@ -10,6 +10,7 @@
     <div style="margin:10px 0">
         <span class="l"><a onclick="showModal('__URL__/create', 'modal_create')" class="btn btn-success">添加角色</a></span>
          <span class="l"><a onclick="showModal('__URL__/update', 'modal_update')" class="btn btn-warning">修改角色</a></span>
+         <span class="l"><a onclick="showModal('__URL__/allocate', 'modal_allocate')" class="btn btn-info">角色分配</a></span>
         <span class="l"><a onclick="del()" class="btn btn-danger">删除角色</a></span>
     </div>
         <div>
@@ -17,7 +18,7 @@
         <thead>
             <tr>
                 <th width="4"></th>
-                <th>名称</th>
+                <th>角色名称</th>
                 <th>描述</th>
                 <th>用户</th>
             </tr>
@@ -29,8 +30,12 @@
                     <div><label style="padding-top:0.5em"><input type="checkbox" value="{$v['id']}" name="id"></label></div>
                  </td>
                 <td>{$v['name']}</td>
-                 <th>{$v['remark']}</th>
-                <td></td>
+                 <td>{$v['remark']}</td>
+                <td>
+                    <foreach name="v.myuser" item="singleUser">
+                        {$singleUser['username']}
+                    </foreach>
+                </td>
             </tr>
         </foreach> 
         </tbody>
@@ -46,7 +51,7 @@
 <script>
 function showModal(url, modalID){
     var id = $(".idColumn input:checked").val();
-    if(id == undefined && modalID != 'modal_create') return false;
+    if(id == undefined && modalID != 'modal_create' && modalID != 'modal_allocate') return false;
     var url = url + "/id/" + id;
     $("#modalContainer").load(url, function(response, status, xhr){
         $("#" + modalID).modal('show');
