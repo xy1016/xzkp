@@ -25,8 +25,8 @@ class CommonController extends Controller {
         //判断有没有写的权限
         if(IS_POST && !empty($action = substr(ACTION_NAME, 0, 6)))
         {
-            $whitelist = ['create', 'update'];
-            if(in_array($action, $whitelist))
+            $blacklist = ['create', 'update', 'delete'];
+            if(in_array($action, $blacklist))
             {
                  $node = MODULE_NAME.'/'.CONTROLLER_NAME.'/write';
                 //一些特殊节点另外定义了权限
