@@ -218,7 +218,7 @@ class AdminController extends CommonController
         if(IS_GET)
         {
             $id = session('mi_game_admin.id');
-            if($res = $this->model->where(['id' => $id])->field(['id', 'username'])->find())
+            if($res = $this->model->where(['id' => $id])->field(['username', 'pic'])->find())
             {
                 $this->assign(['list' => $res]);
                 $this->display();
@@ -236,15 +236,50 @@ class AdminController extends CommonController
         }
     }
 
+    /**
+     * [editmy_pic 修改个人头像, 有点赶工, 可以优化]
+     * @return [type] [description]
+     */
     public function editmy_pic()
     {
+        $id = session('mi_game_admin.id');
+        $avatarPath = './Static/Uploads/Avatar/';
         if(IS_GET)
         {
-            $id = session('mi_game_admin.id');
-            if($res = $this->model->where(['id' => $id])->field(['id', 'username'])->find())
+            if($res = $this->model->where(['id' => $id])->field(['id', 'username', 'pic'])->find())
             {
                 $this->assign(['list' => $res]);
                 $this->display();
+            }
+        }
+        else if(IS_POST)
+        {
+            dump(I());
+            $config = array(
+                'mimes'         =>  array(), //允许上传的文件MiMe类型
+                'exts'          =>  array('jpg', 'gif', 'png', 'jpeg'), //允许上传的文件后缀
+                'autoSub'       =>  true, //自动子目录保存文件
+                'subName'       =>  $id, //子目录创建方式, 删除用户的时候删除此目录
+                'rootPath'      =>  $avatarPath, //保存根路径
+            );
+            $upload = new \Think\Upload($config);// 实例化上传类
+            $info   =   $upload->upload();
+            if(!$info) 
+            {
+                $this->error($upload->getError());// 上传错误提示错误信息
+            }
+            else
+            {// 上传成功
+                $result['status'] = 1;
+                foreach ($info as $va){
+                    $picname = $va['savepath'].$va['savename'];
+                }
+                if(!$this->model->where(['id' => $id])->setField(['pic' => $picname]))
+                {   
+                    //保存不成功则删除
+                    @unlink($avatarPath.$picname);
+                }
+                else @unlink($avatarPath.I('uid')); //删除旧图片
             }
         }
     }

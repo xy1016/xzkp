@@ -112,7 +112,7 @@ class AdminModel extends CommonModel
         $map['status'] = 1;
         $map['isdelete'] = 0;
         $map['username'] = I('post.username');
-        if($row = $this->alias('a')->where($map)->field('a.id,a.username,a.name,a.pwd,b.role_id')->join('left join __ROLE_USER__ b on a.id = b.user_id ')->find())
+        if($row = $this->alias('a')->where($map)->field('a.id, a.username, a.name, a.pwd,a.pic, b.role_id')->join('left join __ROLE_USER__ b on a.id = b.user_id ')->find())
         {   
             if(password_verify(I('post.pwd'), $row['pwd']))
             {   

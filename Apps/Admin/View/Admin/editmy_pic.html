@@ -2,21 +2,28 @@
 <div class="modal inmodal fade" id="modal_pic" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
-        <form class="form-horizontal m-t" action="__URL__/editmy">
+        <form class="form-horizontal m-t">
         <input type="hidden" name="id" value="{$list.id}">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">个人资料</h4>
+                <h4 class="modal-title">{$list['username']}头像设定</h4>
             </div>
             <div class="modal-body">
+            <if condition="$list.pic neq null">
                 <div class="row">
-            <label class="form-label col-2">图片上传：</label>
-            <div class="formControls col-8">
+                     <label class="col-sm-2 control-label" for="username">原头像：</label>
+                     <input name="oldpic" type="hidden" value="{$list.pic}">
+                    <div class="col-sm-8">
+                        <img src="__ROOT__/Static/Uploads/Avatar/{$list.pic}" width="100" height="100">
+                    </div>
+                </div>
+            </if>
+            <div class="row">
                 <div class="uploader-list-container">
                     <div class="queueList">
                         <div id="dndArea" class="placeholder">
                             <div id="filePicker-2"></div>
-                            <p>或将照片拖到这里，单次最多可选300张</p>
+                            <p>或将照片拖到这里，1张就够好^^</p>
                         </div>
                     </div>
                     <div class="statusBar" style="display:none;">
@@ -28,20 +35,19 @@
                         </div>
                     </div>
                 </div>
-        </div>
-    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-                <button type="submit" class="btn btn-primary" id="submitButton">保存</button>
             </div>
              </form>
         </div>
     </div>
 </div>
 <script src="__ROOT__/Static/js/plugins/webuploader/webuploader.min.js"></script>
-<script src="__ROOT__/Static/js/xzkp/xzkp.js"></script>
+<!-- <script src="__ROOT__/Static/js/xzkp/xzkp.js"></script> -->
 <script type="text/javascript" >
+var oldpic = "{$list['pic']}";
 (function( $ ){
     // 当domReady的时候开始初始化
     $(function() {
@@ -138,14 +144,14 @@
                 label: '点击选择图片'
             },
             formData: {
-                uid: 123
+                uid: oldpic
             },
             dnd: '#dndArea',
             paste: '#uploader',
             swf: '../Uploader.swf',
             chunked: false,
             chunkSize: 512 * 1024,
-            server: '__URL__/webupload',
+            server: '__URL__/editmy_pic',
             // runtimeOrder: 'flash',
 
             // accept: {
@@ -195,10 +201,10 @@
         // });
 
         // 添加“添加文件”的按钮，
-        uploader.addButton({
+   /*     uploader.addButton({
             id: '#filePicker2',
             label: '继续添加'
-        });
+        });*/
 
         uploader.on('ready', function() {
             window.uploader = uploader;
