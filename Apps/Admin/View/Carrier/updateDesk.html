@@ -96,7 +96,12 @@ $(function(){
     $(this).val(aa);
     var str = {"id":carrier_id, "game_id": $(this).data("game"), "column":$(this).attr("name"), "value":aa};
     $.post("__URL__/updateDesk", str, function(data){
-        flag = true;
+        if(data.status == 0 && data.url != undefined){
+            sweetAlert("对不起", "您权限不足!", "error");
+        }
+        else if(data.status == 1){
+            flag = true;
+        }
     });
 });
 });

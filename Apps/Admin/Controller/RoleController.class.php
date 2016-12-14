@@ -65,10 +65,10 @@ class RoleController extends CommonController {
     }
 
     /**
-     * [allocate 给用户分配角色， 超管不在此列表]
+     * [update_allocate 给用户分配角色， 超管不在此列表]
      * @return [json] [y or n]
      */
-    public function allocate()
+    public function update_allocate()
     {
         if(IS_GET && IS_AJAX)
         {
@@ -111,7 +111,7 @@ class RoleController extends CommonController {
      * @param  [int] $id [角色id]
      * @return [json]     [y or n]
      */
-    public function del($id) 
+    public function delete_role($id) 
     {
         $this->model->startTrans();
         $count = 0;
@@ -135,10 +135,4 @@ class RoleController extends CommonController {
         $this->model->commit();
         $this->ajaxReturn(['status' => 1]);
     }
-
-   public function test()
-   {    
-
-        $this->model->findByID(1);
-   }
 }

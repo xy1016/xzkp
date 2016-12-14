@@ -87,7 +87,7 @@ function del(obj, id){
                 $(obj).parents("tr").remove();
                 swal("操作成功！", "您已经" + obj.title + "。", "success");
             }
-            else swal("操作失败！", "请稍后尝试！", "danger");
+            else sweetAlert("对不起", "您权限不足!", "error");
          });  
     });
 }

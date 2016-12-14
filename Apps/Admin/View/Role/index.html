@@ -72,13 +72,13 @@ function del()
         closeOnConfirm: false
     }, function () {
         var str = {"id":id};
-        $.post('__URL__/del', str, function(data){
+        $.post('__URL__/delete_role', str, function(data){
             if(data.status == 1)
             {
                 swal("操作成功！", "您已经删除选定角色", "success");
                 location.reload();
             }
-            else swal("操作失败！", data.error, "danger");
+            else sweetAlert("对不起", "您权限不足!", "error");
          });  
     });
 }

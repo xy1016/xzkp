@@ -147,13 +147,18 @@
         myChart.setOption(option);
     </script>
 <script>
+var flag = true
 $(function(){
     $("#updateData").click(function(e){
+        if(flag === false) return false;
+        flag = false;
         $.post("__URL__/updateData", function(data){
             if(data.status == 1){
                 swal("Success!", "您已经更新数据", "success");
             }
-            console.log(data.error);
+            else if(data.status ==0 && data.url != undefined){
+                sweetAlert("对不起", "您权限不足!", "error");
+            }
         });
     })
 })

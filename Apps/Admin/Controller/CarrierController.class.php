@@ -118,19 +118,6 @@ class CarrierController extends CommonController
     }
 
     /**
-     * [reverse 删除或者恢复]
-     * @param  [int] $id [该记录id]
-     * @return [json]     [1成功 0失败]
-     */
-    public function reverse($id)
-    {
-         if($this->model->where(['id' => $id])->setField(['isdelete' => I('post.isdelete')]))
-         {
-            $this->ajaxReturn(['status' => 1]);
-         }
-    }
-
-    /**
      * [create 创建]
      * @return [json]     [1成功 0失败]
      */
@@ -187,12 +174,12 @@ class CarrierController extends CommonController
     * @param  [int] $id [该记录id]
     * @return [json]     [1成功 0失败]
     */
-    public function del($id)
+/*    public function del($id)
     {
         if($this->model->delete($id))
             $this->ajaxReturn(['status' => 1]);
         else $this->ajaxReturn(['status' => 0]);
-    }
+    }*/
 
     /**
      * [delete_code 删除代理注册码]
