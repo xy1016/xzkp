@@ -22,7 +22,7 @@ class LogModel extends CommonModel
             $map['ctime'] = ['egt', I('get.start')];
         if(I('get.end') != '')
             $map['ctime'] = ['elt', I('get.end')];
-        $pagination = getPage($this, $map);
+        $pagination = getPage($this, $map, 10);
         $btn = $pagination->show();
         //管理员列表
         $admins = M('admin')->order('id desc')->field(['username', 'id'])->select();
