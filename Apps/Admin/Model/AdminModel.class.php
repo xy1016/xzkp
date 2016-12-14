@@ -56,6 +56,7 @@ class AdminModel extends CommonModel
      */
     public function queryPage($pageSize = 5, $map = array())
     {	
+        $map['id'] = array('gt', 1);
         $keywords = I('post.keywords');
         if(!empty(trim($keywords)))
         { 
@@ -72,7 +73,8 @@ class AdminModel extends CommonModel
         foreach($list as $key => $value)
         {
         	$list[$key]['status'] = $status[$value['status']];
-        	// $list[$key]['role'] = $this->getRoleRemark($value['role_id']);
+            if(!empty( $value['role_id']))
+        	   $list[$key]['role'] = $this->table(__ROLE__)->field(['id', 'name'])->where(['id' => $value['role_id']])->getField('name');
         	$list[$key]['addtime'] = date('Y-m-d H:i:s', $value['addtime']);
         }
         return ['btn' => $btn, 'list' => $list, 'count' => $count, 'status' => 1];

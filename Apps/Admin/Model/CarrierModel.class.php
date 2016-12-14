@@ -242,4 +242,11 @@ Eof;
         $arr = $this->alias('a')->field('a.id,b.game_id')->join('join __CARRIER_GAME__ b on a.id = b.carrier_id')->where(['a.id' => $id])->getField('game_id', true);
         return $arr;
     }
+
+    public function findCarrierDetail($id)
+    {
+       $res = $this->alias('a')->order('b.id desc')->field(['a.id', 'a.name', 'a.server_ip', 'a.note', 'a.operator', 'a.addtime', 'b.max_online', 'b.total_users', 'b.total_exchange', 'b.orders', 'b.income', 'b.arpu'])->join('left join __CARRIER_STATISTICS__ b on a.id = b.carrier_id')->where(['a.id' => $id])->limit(1)->find();
+       $res['profit'] = $res['income'] - $res['total_exchange'];
+       return $res;
+    }
 }

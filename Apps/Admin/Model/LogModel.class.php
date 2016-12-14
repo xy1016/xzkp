@@ -111,7 +111,7 @@ class LogModel extends CommonModel
             		$prefix = "修改了<span class='tableName'>{$table}</span> {$where}：";
             		break;
             	case '3':
-                    $prefix = "删除 <span class='tableName'>{$table}</span> {$where}: 中的 ";
+                    $prefix = "删除 <span class='tableName'>{$table}</span> {$where}";
             		break;
             }
             $list[$key]['description'] = $prefix.$translate;

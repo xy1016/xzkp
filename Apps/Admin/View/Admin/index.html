@@ -22,9 +22,9 @@
         <table id="userTable" class="table table-border table-bordered table-hover table-bg table-sort" style="border-width:1px">
         <thead>
             <tr class="text-c">
-                <th width="100">图像</th>
+                <th width="40">头像</th>
                 <th width="100">用户名</th>
-                <th width="100">角色</th>
+                <th width="50">角色</th>
                 <th width="100">姓名</th>
                 <th width="90">手机</th>
                 <th width="150">邮箱</th>
@@ -36,8 +36,8 @@
         </thead>
         <tbody>
         <foreach name="list" item="v">
-            <tr class="text-c">
-                <td>{$v['pic']|default=''}</td>
+            <tr>
+                <td><if condition="$v.pic neq null"><img src="__ROOT__/Static/Uploads/Avatar/{$v['pic']}" alt="" width="40" height="40" /></if></td>
                 <td><u style="cursor:pointer" class="text-primary" onclick="member_show({$v['id']},'member-show.html','10001','360','400')">{$v['username']}</u></td>
                  <td>{$v['role']}</td>
                  <td>{$v['name']}</td>

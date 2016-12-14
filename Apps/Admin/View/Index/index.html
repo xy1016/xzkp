@@ -44,12 +44,15 @@
                             <span class="nav-label">主页</span>
                         </a>
                     </li>
-                    <li>
-                        <a class="J_menuItem"><i class="fa fa-odnoklassniki"></i> <span class="nav-label">运营商管理</span> <span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li><a class="J_menuItem" href="{:U('Admin/Carrier/index')}">运营商列表</a></li>
-                        </ul>
-                    </li>
+                    <if condition="(in_array('Admin/Carrier/see', $_SESSION['node'])) or ($Think.session.mi_game_admin.id eq 1)">
+                        <li>
+                            <a class="J_menuItem"><i class="fa fa-odnoklassniki"></i> <span class="nav-label">运营商管理</span> <span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li><a class="J_menuItem" href="{:U('Admin/Carrier/index')}">运营商列表</a></li>
+                            </ul>
+                        </li>
+                    </if>
+                   <if condition="(in_array('Admin/Game/see', $_SESSION['node'])) or ($Think.session.mi_game_admin.id eq 1)">
                     <li>
                         <a class="J_menuItem"><i class="fa fa-delicious"></i> <span class="nav-label">游戏</span> <span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
@@ -57,6 +60,8 @@
                             </li>
                         </ul>
                     </li>
+                    </if>
+                    <if condition="(in_array('Admin/Analysize/see', $_SESSION['node'])) or ($Think.session.mi_game_admin.id eq 1)">
                     <li>
                         <a class="J_menuItem"><i class="fa fa fa-bar-chart-o"></i> <span class="nav-label">统计</span> <span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
@@ -64,6 +69,8 @@
                             </li>
                         </ul>
                     </li>
+                    </if>
+                    <if condition="(in_array('Admin/Log/see', $_SESSION['node'])) or ($Think.session.mi_game_admin.id eq 1)">
                     <li>
                         <a class="J_menuItem"><i class="fa fa-video-camera"></i> <span class="nav-label">系统日志</span> <span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
@@ -71,6 +78,8 @@
                             </li>
                         </ul>
                     </li>
+                    </if>
+                    <if condition="(in_array('Admin/Admin/see', $_SESSION['node'])) or ($Think.session.mi_game_admin.id eq 1)">
                     <li>
                         <a class="J_menuItem"><i class="fa fa-user"></i> <span class="nav-label">管理员</span> <span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
@@ -80,13 +89,18 @@
                             </li>
                         </ul>
                     </li>
+                    </if>
+                    <if condition="(in_array('Admin/Role/see', $_SESSION['node'])) or ($Think.session.mi_game_admin.id eq 1)">
                     <li>
                         <a class="J_menuItem"><i class="fa fa-shield"></i> <span class="nav-label">权限管理</span> <span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                         <li><a class="J_menuItem" href="{:U('Admin/Role/index')}">角色管理</a></li>
+                        <if condition="$Think.session.mi_game_admin.id eq 1">
                         <li><a class="J_menuItem" href="{:U('Admin/Node/index')}">权限节点</a></li>
+                        </if>
                         </ul>
                     </li>
+                    </if>
                 </ul>
             </div>
         </nav>

@@ -50,4 +50,18 @@ return
 		'daily_w' => '日活预警',
 		'state' => ['注册码状态' => ['未使用', '已使用']],
 	],
+	'role' => 
+	[
+		'tableName' => '角色',
+		'name' => '角色名',
+		'remark' => '身份',
+	],
+	'role_node' => 
+	[
+		'tableName' => '权限节点',
+	],
+	'role_user' => 
+	[
+		'tableName' => '角色和用户的绑定关系',
+	],
 ];

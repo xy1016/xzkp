@@ -148,7 +148,7 @@ class CarrierController extends CommonController
 
     public function detail($id)
     {
-        $row = $this->model->field(['id', 'name', 'server_ip', 'note', 'operator', 'addtime'])->where(['id' => $id])->find();
+        $row = $this->model->findCarrierDetail($id);
         $row['addtime'] = date('Y-m-d H:i:s', $row['addtime']);
         $this->assign(['list' => $row]);
         $this->display('detail');
