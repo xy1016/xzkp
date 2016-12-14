@@ -78,7 +78,7 @@ class RoleController extends CommonController {
             $map['id'] = ['gt', 1];
             $list['list'] = M('admin')->field('id, username')->where($map)->select();
             $this->assign($list);
-            $this->display(); 
+            $this->display('allocate'); 
         }
         else if(IS_POST && IS_AJAX)
         {   
