@@ -66,11 +66,11 @@ class AdminController extends CommonController
     }
 
     /**
-     * [reverse 删除或者恢复]
+     * [delete_f 删除或者恢复]
      * @param  [int] $id [用户id]
      * @return [json]     [1成功 0失败]
      */
-    public function reverse($id)
+    public function delete_f($id)
     {
         if($this->model->where(['id' => $id])->setField(['isdelete' => I('post.isdelete')]))
         {
@@ -110,7 +110,7 @@ class AdminController extends CommonController
      * @param  [int] $id [用户id]
      * @return [json]     [1成功 0失败]
      */
-    public function change_password($id)
+    public function update_password($id)
     {
         if(IS_GET)
         {
@@ -127,7 +127,7 @@ class AdminController extends CommonController
             else $this->ajaxReturn(['status' => 0]);
         }    
     }
-
+/*
     //删除用户,同时删除role_user表中记录的该用户角色
     public function del($id)
     {
@@ -143,7 +143,7 @@ class AdminController extends CommonController
         }
         //以上操作都没有成功返回,则返回失败状态
         $this->ajaxReturn(['status' => 0]);  
-    }
+    }*/
 
     /**
      * [login 验证登录]

@@ -12,7 +12,7 @@
         <span class="l"><a onclick="showModal('detail', 'modal_detail')" class="btn btn-primary"><i class="fa fa-leaf"></i> 运营商详情</a></span>
         <span class="l"><a onclick="showModal('__URL__/update', 'modal_update')" class="btn btn-info"><i class="fa fa-edit"></i> 编辑运营商</a></span>
         <span class="l"><a onclick="showModal('__URL__/updateDesk', 'modal_updateDesk')" class="btn btn-warning"><i class="fa fa-desktop"></i> 游戏桌数设定</a></span>
-        <span class="l"><a onclick="showModal('__URL__/agent', 'modal_agent')" class="btn btn-white"><i class="fa fa-list"></i> 代理员开户</a></span>
+        <span class="l"><a onclick="showModal('__URL__/create_agent', 'modal_agent')" class="btn btn-white"><i class="fa fa-list"></i> 代理员开户</a></span>
     </div>
         <div class="row">
          <form action="__URL__/index">
@@ -86,16 +86,6 @@
 <div id="modalContainer" style="display:none"></div>
 <script>
 $(function() {
-    // $(".i-checks").iCheck({checkboxClass:"icheckbox_square-green",radioClass:"iradio_square-green",});
-    //模态框清除提示， 表单重置
-/*    $('.modal').on('show.bs.modal', function (e){
-       $('.modal form')[0].reset();
-       $('.modal form').find(".result").html('').end().find("input:not('[type*=hidden], [readonly], [type*=checkbox]')").next().children().remove();
-    });
-    $('#modal_create').on('show.bs.modal', function (){
-       getCode('modal_create');
-    });*/
-    //编辑
     $(".idColumn input").click(function(){
         $(".idColumn input").not(this).removeAttr("checked");
     });

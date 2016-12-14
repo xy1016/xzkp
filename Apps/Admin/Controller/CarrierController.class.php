@@ -64,7 +64,7 @@ class CarrierController extends CommonController
      * @param  [int] $id [运营商id]
      * @return [查询返回运营商id和名称，post提交生成注册码并返回成功状态]
      */
-    public function agent($id)
+    public function create_agent($id)
     {
         if(IS_GET && IS_AJAX)
         {
@@ -195,19 +195,14 @@ class CarrierController extends CommonController
     }
 
     /**
-     * [delCode 删除代理注册码]
+     * [delete_code 删除代理注册码]
      * @param  [int] $id [代理注册码id]
      * @return [json]     [y or n]
      */
-    public function delCode($id)
+    public function delete_code($id)
     {
         if(M('carrier_agent')->delete($id))
             $this->ajaxReturn(['status' => 1]);
         else $this->ajaxReturn(['status' => 0]);
-    }
-
-    public function test()
-    {
-        $this->model->queryPage(5);
     }
 }

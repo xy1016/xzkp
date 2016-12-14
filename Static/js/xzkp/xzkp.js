@@ -40,7 +40,6 @@ function postData(obj, url, str) {
                    ele.next().children().remove();
                 } else {
                     ele.next().append('<i class="fa fa-info-circle"> ' + res[i].error + '</i>')
-                    // ele.next().children("i").addClass("fa fa-info-circle").text(res[i].error);
                 }
             }
             if(res.length > 1)

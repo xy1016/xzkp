@@ -75,13 +75,13 @@ function member_del(obj, id){
         closeOnConfirm: false
     }, function () {
         var str = {'id':id};
-        $.post('__URL__/reverse', str, function(data){
+        $.post('__URL__/delete_f', str, function(data){
             if(data.status == 1)
             {
                 $(obj).parents("tr").remove();
                 swal("操作成功！", "您已经" + obj.title + "。", "success");
             }
-            else swal("操作失败！", "请稍后尝试！", "danger");
+            else sweetAlert("对不起", "您权限不足!", "error");
          });  
     });
 }
