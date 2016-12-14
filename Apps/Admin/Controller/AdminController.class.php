@@ -235,4 +235,17 @@ class AdminController extends CommonController
             $this->ajaxReturn(['status' => 0]);
         }
     }
+
+    public function editmy_pic()
+    {
+        if(IS_GET)
+        {
+            $id = session('mi_game_admin.id');
+            if($res = $this->model->where(['id' => $id])->field(['id', 'username'])->find())
+            {
+                $this->assign(['list' => $res]);
+                $this->display();
+            }
+        }
+    }
 }

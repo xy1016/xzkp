@@ -5,7 +5,7 @@ class GameController extends CommonController {
    /*显示管理员列表, 定义数据库表名*/
    public function index()	//查 分页显示数据
    {   
-      $res = $this->model->queryPage(5, $map);
+      $res = $this->model->queryPage();
       $this->assign($res);
       $this->display('index');
    }

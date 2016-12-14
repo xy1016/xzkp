@@ -18,6 +18,7 @@ class AdminModel extends CommonModel
 		['username','','用户名已存在',1,'unique',3],
         ['name','','该姓名已存在',0,'unique',3],
 		['email','','Email已存在',0,'unique',3],
+        ['oldpwd','require','原始密码不能为空!', 0, '', 2], 
         ['oldpwd','verifyOldPwd','原始密码错误!', 0,'callback', 2], 
     ];
 

@@ -25,7 +25,7 @@ class GameModel extends CommonModel
     }
 	//分页查询
 	//pageSize 分页数; $map 分页过滤条件
-    public function queryPage($pageSize = 5, $map = array())
+    public function queryPage()
     {	
       $keywords = I('post.keywords');
       if(!empty(trim($keywords)))
@@ -35,12 +35,9 @@ class GameModel extends CommonModel
          $where['_logic'] = 'or';
          $map['_complex'] = $where;
       }
-    	$count = $this->where($map)->count();
-    	$pagination = new \Think\Page($count,$pageSize);
-        if(I('keywords')) //关键词分页显示
-        $pagination->parameter['keywords'] = urlencode(I('keywords'));
+    	$pagination = getPage($this, $map, 5);
     	$btn = $pagination->show();
-    	$list = $this->where($map)->limit($pagination->firstRow.','.$pagination->listRows)->select();
+    	$list = $this->where($map)->select();
     	foreach($list as $key => $value)
     	{
     		$list[$key]['addtime'] = date('Y-m-d H:i:s', $value['addtime']);
