@@ -28,7 +28,7 @@
                             <ul class="dropdown-menu animated fadeInRight m-t-xs">
                                 <li><a class="J_menuItem" href="form_avatar.html">修改头像</a>
                                 </li>
-                                <li><a class="J_menuItem" href="profile.html">个人资料</a>
+                                <li><a class="J_menuItem" onclick="return showPersonal()">个人资料</a>
                                 </li>
                                 <li class="divider"></li>
                                 <li><a href="{:U('Admin/Admin/logout')}">安全退出</a>
@@ -122,13 +122,14 @@
                 <a href="{:U('Admin/Admin/logout')}" class="roll-nav roll-right J_tabExit"><i class="fa fa fa-sign-out"></i> 退出</a>
             </div>
             <div class="row J_mainContent" id="content-main">
-                <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="__URL__/welcome" frameborder="0" data-id="index_v1.html" seamless></iframe>
+                <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="__URL__/welcome" frameborder="0" seamless></iframe>
             </div>
         </div>
         <!--右侧部分结束-->
         <div class="footer">
             <div class="pull-right">&copy; 2014-2015 <a href="http://www.zi-han.net/" target="_blank">麦游互动</a></div>
         </div>
+        <div id="personalInfo" style="display:none"></div>
     </div>
    <script src="__ROOT__/Static/js/jquery.min.js?v=2.1.4"></script>
    <script src="__ROOT__/Static/js/bootstrap.min.js?v=3.3.6"></script>
@@ -138,5 +139,15 @@
    <script src="__ROOT__/Static/js/hplus.min.js?v=4.1.0"></script>
    <script src="__ROOT__/Static/js/plugins/pace/pace.min.js"></script>
    <script src="__ROOT__/Static/js/contabs.min.js"></script>
+   <script>
+    function showPersonal()
+    {
+        $("#personalInfo").load("{:U('Admin/Admin/edit')}", function(response,status,xhr){
+            $("#modal_edit").modal('show');
+            $.getScript("__ROOT__/Static/js/content.min.js?v=1.0.0", function() {});
+        })
+        return false;
+    }
+   </script>
 </body>
  </html> 

@@ -185,4 +185,16 @@ class AdminController extends CommonController
         session('[destroy]'); 
         echo "<script>window.open('".U('Admin/Admin/login')."', '_top')</script>";
     }
+
+    /**
+     * [edit 修改个人资料]
+     * @return [type] [description]
+     */
+    public function edit()
+    {   
+        $id = session('mi_game_admin.id');
+        $list = $this->model->where(['id' => $id])->field(['id', 'name', 'username', 'email', 'phone'])->find();
+        $this->assign(['list' => $list]);
+        $this->display();
+    }
 }
