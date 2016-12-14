@@ -26,9 +26,9 @@
                                 </span>
                             </a>
                             <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                                <li><a class="J_menuItem" href="form_avatar.html">修改头像</a>
-                                </li>
-                                <li><a class="J_menuItem" onclick="return showPersonal()">个人资料</a>
+                                <li><a class="J_menuItem" href="form_avatar.html">修改头像</a></li>
+                                <li><a class="J_menuItem" onclick="showModal('{:U("Admin/Admin/editmy_pwd")}','modal_pwd')">更新密码</a></li>
+                                <li><a class="J_menuItem" onclick="showModal('{:U("Admin/Admin/editmy")}','modal_edit')">个人资料</a>
                                 </li>
                                 <li class="divider"></li>
                                 <li><a href="{:U('Admin/Admin/logout')}">安全退出</a>
@@ -140,13 +140,12 @@
    <script src="__ROOT__/Static/js/plugins/pace/pace.min.js"></script>
    <script src="__ROOT__/Static/js/contabs.min.js"></script>
    <script>
-    function showPersonal()
+    function showModal(url, modalID)
     {
-        $("#personalInfo").load("{:U('Admin/Admin/edit')}", function(response,status,xhr){
-            $("#modal_edit").modal('show');
+        $("#personalInfo").load(url, function(response,status,xhr){
+            $("#" + modalID).modal('show');
             $.getScript("__ROOT__/Static/js/content.min.js?v=1.0.0", function() {});
         })
-        return false;
     }
    </script>
 </body>

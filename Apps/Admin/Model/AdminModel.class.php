@@ -18,6 +18,7 @@ class AdminModel extends CommonModel
 		['username','','用户名已存在',1,'unique',3],
         ['name','','该姓名已存在',0,'unique',3],
 		['email','','Email已存在',0,'unique',3],
+        ['oldpwd','verifyOldPwd','原始密码错误!', 0,'callback', 2], 
     ];
 
     protected $_validate_login = [
@@ -63,17 +64,14 @@ class AdminModel extends CommonModel
             $where['_logic'] = 'or';
             $map['_complex'] = $where;
         }
-        $count = $this->where($map)->count();
-        $pagination = new \Think\Page($count,$pageSize);
-        if(I('keywords')) //关键词分页显示
-            $pagination->parameter['keywords'] = urlencode(I('keywords'));
+        $pagination = getPage($this, $map, 5);
         $btn = $pagination->show();
-        $list = $this->alias('a')->order('id desc')->field('a.*,b.role_id')->join('left join __ROLE_USER__ b on a.id = b.user_id')->where($map)->limit($pagination->firstRow.','.$pagination->listRows)->select();
+        $list = $this->alias('a')->order('id desc')->field('a.*,b.role_id')->join('left join __ROLE_USER__ b on a.id = b.user_id')->where($map)->select();
         $status = ['已停用', '已启用'];
         foreach($list as $key => $value)
         {
         	$list[$key]['status'] = $status[$value['status']];
-        	$list[$key]['role'] = $this->getRoleRemark($value['role_id']);
+        	// $list[$key]['role'] = $this->getRoleRemark($value['role_id']);
         	$list[$key]['addtime'] = date('Y-m-d H:i:s', $value['addtime']);
         }
         return ['btn' => $btn, 'list' => $list, 'count' => $count, 'status' => 1];
@@ -118,7 +116,6 @@ class AdminModel extends CommonModel
             if(password_verify(I('post.pwd'), $row['pwd']))
             {   
                 session('node', null); //先删除同PHPSESESSION下可能存在的其他账户信息
-                unset($row['pwd']); //密码不存入session
                 //存储该用户的权限信息
                 if($nodeNames = $this->getMyActions($row['role_id']))
                     session('node', $nodeNames);
@@ -128,6 +125,17 @@ class AdminModel extends CommonModel
                 return true;
             }
         }
+        return false;
+    }
+
+    /**
+     * [verifyOldPwd 验证用户自己修改密码是是否正确]
+     * @return [bool] [返回验证 y or n]
+     */
+    public function verifyOldPwd()
+    {
+        if(password_verify(I('post.oldpwd'), session('mi_game_admin.pwd')))
+            return true;
         return false;
     }
 

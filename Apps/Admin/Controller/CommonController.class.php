@@ -7,13 +7,13 @@ class CommonController extends Controller {
     public function _initialize()
     {
         //检测是否是登录操作， 不是则验证登录状态
-        $whitelist = ['login', 'logout'];
-        if(!session('mi_game_admin') && !in_array(ACTION_NAME, $whitelist))
+        if(!session('mi_game_admin') && ACTION_NAME != 'login')
         {
             $this->redirect('Admin/Admin/login');
             exit;
         }
         //权限判断, 任何方法都检查是否有读的权限
+        $whitelist = ['login', 'logout', 'editmy'];
         if(IS_GET && !in_array(ACTION_NAME, $whitelist))
         {
             $node = MODULE_NAME.'/'.CONTROLLER_NAME.'/read';

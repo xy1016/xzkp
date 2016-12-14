@@ -45,7 +45,8 @@ class AdminController extends CommonController
             $this->validatePost();
             if(false !== $this->model->data(I('post.'))->save())
                 $this->ajaxReturn(['status' => 1]);
-            else{
+            else
+            {
                 $this->ajaxReturn(['status' => 0]);
             }
         }
@@ -190,11 +191,48 @@ class AdminController extends CommonController
      * [edit 修改个人资料]
      * @return [type] [description]
      */
-    public function edit()
+    public function editmy()
     {   
-        $id = session('mi_game_admin.id');
-        $list = $this->model->where(['id' => $id])->field(['id', 'name', 'username', 'email', 'phone'])->find();
-        $this->assign(['list' => $list]);
-        $this->display();
+        if(IS_GET)
+        {
+            $id = session('mi_game_admin.id');
+            $list = $this->model->where(['id' => $id])->field(['id', 'name', 'username', 'email', 'phone'])->find();
+            $this->assign(['list' => $list]);
+            $this->display();
+        }
+        else if(IS_POST)
+        {
+            $this->validatePost();
+            if(false !== $this->model->data(I('post.'))->save())
+                $this->ajaxReturn(['status' => 1]);
+            $this->ajaxReturn(['status' => 0]);
+        }
+    }
+
+    /**
+     * [edit_pwd 用户自己修改密码 需要验证原始密码]
+     * @return [json] [y or n]
+     */
+    public function editmy_pwd()
+    {   
+        if(IS_GET)
+        {
+            $id = session('mi_game_admin.id');
+            if($res = $this->model->where(['id' => $id])->field(['id', 'username'])->find())
+            {
+                $this->assign(['list' => $res]);
+                $this->display();
+            }
+        }
+        else if(IS_POST)
+        {
+            $this->validatePost();
+            if($this->model->save())
+            {   
+                session('[destroy]'); 
+                $this->ajaxReturn(['status' => 1]);
+            }
+            $this->ajaxReturn(['status' => 0]);
+        }
     }
 }
