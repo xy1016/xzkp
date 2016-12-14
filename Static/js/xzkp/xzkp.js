@@ -17,7 +17,7 @@ function showResult(obj, status)
   if(status){
     result.css("color","green").html("保存成功!");
   } 
-  else result.css("color","red").html("保存失败!");
+  else if(status == 0) result.css("color","red").html("保存失败!");
   $(obj).find("#submitButton").text("保存");
   flag = true;
 }
@@ -27,7 +27,12 @@ function postData(obj, url, str) {
         if (data.status == 1) {
             showResult(obj, 1);
             $(obj).find(".fa-info-circle").remove();
-        } else if(data.error != undefined) {
+        } 
+        else if(data.url != undefined && data.status == 0){
+            sweetAlert("对不起", "您权限不足!", "error");
+            showResult(obj);
+        }
+        else if(data.error != undefined) {
             var res = data.error;
             for (var i = 0; i < res.length; i++) {
                 var ele = $(obj).find("input[name=\"" + res[i].ele + "\"]:not('[type*=hidden], [readonly]')");
