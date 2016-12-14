@@ -114,18 +114,17 @@ class AdminModel extends CommonModel
         $map['isdelete'] = 0;
         $map['username'] = I('post.username');
         if($row = $this->alias('a')->where($map)->field('a.id,a.username,a.name,a.pwd,b.role_id')->join('left join __ROLE_USER__ b on a.id = b.user_id ')->find())
-        // if($row = $this->where($map)->find())
         {   
             if(password_verify(I('post.pwd'), $row['pwd']))
             {   
                 session('node', null); //先删除同PHPSESESSION下可能存在的其他账户信息
                 unset($row['pwd']); //密码不存入session
-                session('mi_game_admin', $row);
                 //存储该用户的权限信息
                 if($nodeNames = $this->getMyActions($row['role_id']))
                     session('node', $nodeNames);
-             /*   dump($nodeNames);
-                dump(session('node'));die;*/
+                if($row['id'] == 1) $row['roleName'] = '超级管理员';
+                else $row['roleName'] = M('role')->where(['id' => $row['role_id']])->getField('name');
+                session('mi_game_admin', $row);
                 return true;
             }
         }
@@ -177,13 +176,4 @@ class AdminModel extends CommonModel
         }
         return true;
     }
-
-    protected function getRoleRemark($id)
-    {
-        /*if($roleID = M('role_user')->where(['user' => $id])->getField('role_id'))
-        {
-            $roleName = M('role')->where(['id' => $roleID])
-        }*/
-    }
-
 }

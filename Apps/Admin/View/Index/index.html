@@ -21,18 +21,14 @@
                             <span><img alt="image" class="img-circle" src="__ROOT__/Static/img/profile_small.jpg" /></span>
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                 <span class="clear">
-                               <span class="block m-t-xs"><strong class="font-bold">Beaut-zihan</strong></span>
-                                <span class="text-muted text-xs block">超级管理员<b class="caret"></b></span>
+                               <span class="block m-t-xs"><strong class="font-bold">{$Think.session.mi_game_admin.username}</strong></span>
+                                <span class="text-muted text-xs block">{$Think.session.mi_game_admin.roleName}<b class="caret"></b></span>
                                 </span>
                             </a>
                             <ul class="dropdown-menu animated fadeInRight m-t-xs">
                                 <li><a class="J_menuItem" href="form_avatar.html">修改头像</a>
                                 </li>
                                 <li><a class="J_menuItem" href="profile.html">个人资料</a>
-                                </li>
-                                <li><a class="J_menuItem" href="contacts.html">联系我们</a>
-                                </li>
-                                <li><a class="J_menuItem" href="mailbox.html">信箱</a>
                                 </li>
                                 <li class="divider"></li>
                                 <li><a href="{:U('Admin/Admin/logout')}">安全退出</a>
@@ -49,13 +45,34 @@
                         </a>
                     </li>
                     <li>
-                        <a class="J_menuItem"><i class="fa fa-columns"></i> <span class="nav-label">运营商管理</span> <span class="fa arrow"></span></a>
+                        <a class="J_menuItem"><i class="fa fa-odnoklassniki"></i> <span class="nav-label">运营商管理</span> <span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li><a class="J_menuItem" href="{:U('Admin/Carrier/index')}">运营商列表</a></li>
                         </ul>
                     </li>
                     <li>
-                        <a class="J_menuItem"><i class="fa fa-columns"></i> <span class="nav-label">管理员</span> <span class="fa arrow"></span></a>
+                        <a class="J_menuItem"><i class="fa fa-delicious"></i> <span class="nav-label">游戏</span> <span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li><a class="J_menuItem" href="{:U('Admin/Game/index')}">游戏列表</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="J_menuItem"><i class="fa fa fa-bar-chart-o"></i> <span class="nav-label">统计</span> <span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li><a class="J_menuItem" href="{:U('Admin/Analysize/index')}">运营商统计</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="J_menuItem"><i class="fa fa-video-camera"></i> <span class="nav-label">系统日志</span> <span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li><a class="J_menuItem" href="{:U('Admin/Log/index')}">日志列表</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="J_menuItem"><i class="fa fa-user"></i> <span class="nav-label">管理员</span> <span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li><a class="J_menuItem" href="{:U('Admin/Admin/index')}">管理员列表</a>
                             </li>
@@ -64,28 +81,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a class="J_menuItem"><i class="fa fa-columns"></i> <span class="nav-label">游戏</span> <span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li><a class="J_menuItem" href="{:U('Admin/Game/index')}">游戏列表</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a class="J_menuItem"><i class="fa fa-columns"></i> <span class="nav-label">统计</span> <span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li><a class="J_menuItem" href="{:U('Admin/Analysize/index')}">运营商统计</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a class="J_menuItem"><i class="fa fa-columns"></i> <span class="nav-label">系统日志</span> <span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li><a class="J_menuItem" href="{:U('Admin/Log/index')}">日志列表</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a class="J_menuItem"><i class="fa fa-columns"></i> <span class="nav-label">权限管理</span> <span class="fa arrow"></span></a>
+                        <a class="J_menuItem"><i class="fa fa-shield"></i> <span class="nav-label">权限管理</span> <span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                         <li><a class="J_menuItem" href="{:U('Admin/Role/index')}">角色管理</a></li>
                         <li><a class="J_menuItem" href="{:U('Admin/Node/index')}">权限节点</a></li>
