@@ -126,7 +126,7 @@ function turnOff(obj, id){
                 $(obj).replaceWith('<button class="btn btn-success btn-circle btn-sm switch" type="button" onClick="turnOn(this, ' + id + ')" title="启用服务器"><i class="fa fa-check"></i></button>');
                 swal("操作成功！", "您已经" + obj.title + "。", "success");
             }
-            else swal("操作失败！", "请稍后尝试！", "danger");
+            else sweetAlert("对不起", "您权限不足!", "error");
          });  
     });
 }
@@ -149,7 +149,7 @@ function turnOn(obj, id){
                 $(obj).replaceWith('<button class="btn btn-warning btn-circle btn-sm switch" type="button" onClick="turnOff(this, ' + id + ')" title="停用服务器"><i class="fa fa-times"></i></button>');
                 swal("操作成功！", "您已经" + obj.title + "。", "success");
             }
-            else swal("操作失败！", "请稍后尝试！", "danger");
+            else sweetAlert("对不起", "您权限不足!", "error");
          });  
     });
 }

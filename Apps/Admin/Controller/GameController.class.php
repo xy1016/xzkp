@@ -59,19 +59,15 @@ class GameController extends CommonController {
          else echo $this->model->_sql();
    }
    //彻底删除
-   public function del($id)
-   {
-      $this->model->startTrans();
-      if($this->model->delete($id))
-      {
-          if($this->model->table(__ROLE_USER__)->where(['user_id' => $id])->delete())
-          {
-            $this->model->commit();
-            $this->ajaxReturn(['status' => 1]);  
-          }
-          else $this->model->rollBack();
-      }
-      //以上操作都没有成功返回,则返回失败状态
-      $this->ajaxReturn(['status' => 0]);  
-   }
+    public function delete($id)
+    {   
+        $count = 0;
+        if($count = $this->model->table(__CARRIER_GAME__)->where(['game_id' => $id])->count())
+        {   
+            $this->ajaxReturn(['status' => 0, 'error' => $count.'个运营商还有该款游戏,不能删除']);  
+        }
+        if(false !== $this->model->delete($id))
+            $this->ajaxReturn(['status' => 1]);
+        $this->ajaxReturn(['status' => 0]);  
+    }
 }

@@ -42,8 +42,8 @@
                     .td-manage a{margin-right:5px;}
                  </style>
                 <td class="td-manage">
-                <button onClick="fillModal({$v['id']})" class="btn btn-info " type="button"><i class="fa fa-paste"></i> 编辑</button>
-                <button onClick="del(this, {$v['id']})" class="btn btn-danger " type="button"><i class="fa fa-close"></i> 删除</button>
+                <button onClick="fillModal({$v['id']})" class="btn btn-info" type="button"><i class="fa fa-paste"></i> 编辑</button>
+                <button onClick="del(this, {$v['id']})" class="btn btn-danger" title="删除游戏" type="button"><i class="fa fa-close"></i> 删除</button>
                 </td>
             </tr>
         </foreach> 
@@ -80,14 +80,17 @@ function del(obj, id){
         confirmButtonText: obj.title,
         closeOnConfirm: false
     }, function () {
-        var str = {"id":id, "isdelete":1};
-        $.post('__URL__/reverse', str, function(data){
+        var str = {"id":id};
+        $.post('__URL__/delete', str, function(data){
             if(data.status == 1)
             {
                 $(obj).parents("tr").remove();
                 swal("操作成功！", "您已经" + obj.title + "。", "success");
             }
-            else sweetAlert("对不起", "您权限不足!", "error");
+            else if(data.status == 0 && data.url != undefined) sweetAlert("对不起", "您权限不足!", "error");
+            else if(data.status == 0){
+                sweetAlert("警告", data.error, "error");
+            }
          });  
     });
 }

@@ -215,9 +215,9 @@ class AdminController extends CommonController
      */
     public function editmy_pwd()
     {   
+        $id = session('mi_game_admin.id');
         if(IS_GET)
         {
-            $id = session('mi_game_admin.id');
             if($res = $this->model->where(['id' => $id])->field(['username', 'pic'])->find())
             {
                 $this->assign(['list' => $res]);
@@ -227,7 +227,7 @@ class AdminController extends CommonController
         else if(IS_POST)
         {
             $this->validatePost();
-            if($this->model->save())
+            if($this->model->where(['id' => $id])->field('pwd')->save())
             {   
                 session('[destroy]'); 
                 $this->ajaxReturn(['status' => 1]);
@@ -242,10 +242,10 @@ class AdminController extends CommonController
      */
     public function editmy_pic()
     {
-        $id = session('mi_game_admin.id');
         $avatarPath = './Static/Uploads/Avatar/';
         if(IS_GET)
         {
+            $id = session('mi_game_admin.id');
             if($res = $this->model->where(['id' => $id])->field(['id', 'username', 'pic'])->find())
             {
                 $this->assign(['list' => $res]);
@@ -254,7 +254,6 @@ class AdminController extends CommonController
         }
         else if(IS_POST)
         {
-            dump(I());
             $config = array(
                 'mimes'         =>  array(), //允许上传的文件MiMe类型
                 'exts'          =>  array('jpg', 'gif', 'png', 'jpeg'), //允许上传的文件后缀

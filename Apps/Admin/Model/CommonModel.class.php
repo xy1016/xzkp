@@ -81,6 +81,7 @@ class CommonModel extends \Think\Model
         $log['affected_table'] = $table;
         $log['action'] = $action;
         $log['description'] = $desc;
+        $log['role'] = session('mi_game_admin.roleName');
         if(!empty($where)) $log['where'] = $where;
         M('sys_log')->data($log)->add();
     }

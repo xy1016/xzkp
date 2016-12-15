@@ -1,7 +1,7 @@
 <?php
 namespace Admin\Model;
 
-class LogModel extends CommonModel
+class LogModel extends \Think\Model
 {	
 	protected $tableName = 'sys_log';
 	protected $translation;
@@ -28,7 +28,7 @@ class LogModel extends CommonModel
         $admins = M('admin')->order('id desc')->field(['username', 'id'])->select();
         $list = $this->alias('a')->order('ctime desc')->field('a.*, b.username')->where($map)->join('left join admin b on a.userID = b.id')->select();
         foreach($list as $key => $value)
-        {
+        {   
             //描述
             $translate = '';
             //翻译表名

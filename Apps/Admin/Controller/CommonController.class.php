@@ -24,13 +24,12 @@ class CommonController extends Controller {
         //判断有没有写的权限
         if(IS_POST && !empty($action = substr(ACTION_NAME, 0, 6)))
         {
-            $blacklist = ['create', 'update', 'delete'];
+            $blacklist = ['create', 'update', 'delete', 'revers'];
             if(in_array($action, $blacklist))
             {
-                 $node = MODULE_NAME.'/'.CONTROLLER_NAME.'/write';
-                //一些特殊节点另外定义了权限
+                $node = MODULE_NAME.'/'.CONTROLLER_NAME.'/write';
                 if(session('mi_game_admin.id') != 1 && !in_array($node, session('node')))
-                $this->error('您权限不足', U('Admin/Index/welcome'));
+                    $this->error('您权限不足', U('Admin/Index/welcome'));
             }
         }
     }
