@@ -41,6 +41,10 @@ class RoleController extends CommonController {
         $this->ajaxReturn(['status' => 1, 'res' => $res]);
     }
 
+    /**
+     * [create 浏览和创建角色]
+     * @return [json] [返回创建结果]
+     */
     public function create()
     {  
         if(IS_GET && IS_AJAX)
@@ -85,10 +89,9 @@ class RoleController extends CommonController {
             $post = I('post.');
             foreach($post as $key => $value)
             {
-                if(empty($value))
-                    $error[] = ['ele' => $key, 'error' => '不能为空'];
+                if($value == '')
+                    $this->ajaxReturn(['status' => 0]);
             }
-            if(count($error) > 0) $this->ajaxReturn(['status' => 0, 'error' => $error]);
             $model = M('role_user');
             if($model->where(['user_id' => $post['user_id']])->count())
                 $model->data($post)->save();
@@ -114,22 +117,20 @@ class RoleController extends CommonController {
     public function delete_role($id) 
     {
         $this->model->startTrans();
-        $count = 0;
         $flag = true;
+        //删除角色
         if(!$this->model->table(__ROLE__)->where(['id' => $id])->delete())
         {
             $flag = false;
         } 
-        if(!$this->model->table(__ROLE_NODE__)->where(['role_id' => $id])->delete()) $flag = false;
-        if($this->model->table(__ROLE_USER__)->find($id)) //确认该角色下是否有用户
-        {
-         if(!$this->model->table(__ROLE_USER__)->where(['role_id' => $id])->delete())
-            $flag = false;
-        }
+        //删除角色的权限关系
+        if($flag && !$this->model->table(__ROLE_NODE__)->where(['role_id' => $id])->delete()) $flag = false;
+        //删除角色绑定的用户关系
+        if($flag && false === $this->model->table(__ROLE_USER__)->where(['role_id' => $id])->delete()) $flag = false;
         if(!flag)
         {
-         $this->model->rollback;
-         $this->ajaxReturn(['status' => 0, 'error' => '请稍候尝试!']);
+            $this->model->rollback;
+            $this->ajaxReturn(['status' => 0, 'error' => '请稍候尝试!']);
         }
         //如果flag还为true 说明删除都成功
         $this->model->commit();

@@ -77,7 +77,7 @@ class AdminModel extends CommonModel
         	   $list[$key]['role'] = $this->table(__ROLE__)->field(['id', 'name'])->where(['id' => $value['role_id']])->getField('name');
         	$list[$key]['addtime'] = date('Y-m-d H:i:s', $value['addtime']);
         }
-        return ['btn' => $btn, 'list' => $list, 'count' => $count, 'status' => 1];
+        return ['btn' => $btn, 'list' => $list];
     }
     
     /**

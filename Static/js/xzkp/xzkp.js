@@ -32,7 +32,7 @@ function postData(obj, url, str) {
             sweetAlert("对不起", "您权限不足!", "error");
             showResult(obj);
         }
-        else if(data.error != undefined) {
+        else if(data.error != undefined && data.error.length >0) {
             var res = data.error;
             for (var i = 0; i < res.length; i++) {
                 var ele = $(obj).find("input[name=\"" + res[i].ele + "\"]:not('[type*=hidden], [readonly]')");

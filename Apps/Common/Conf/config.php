@@ -11,7 +11,8 @@ return array(
 	'URL_MODEL' => 2,
 				
 	'DB_TYPE' => 'mysql',
-	'DB_HOST' => '192.168.3.2',
+	// 'DB_HOST' => '192.168.3.2',
+	'DB_HOST' => 'localhost',
 	'DB_NAME' => 'xzkpmonit',
 	'DB_USER' => 'root',
 	'DB_PWD' => 'root',
