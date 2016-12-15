@@ -47,17 +47,17 @@
 </div>
 <script src="__ROOT__/Static/js/xzkp/xzkp.js"></script>
 <script>
-$("#selectUser").change(function(){
-    var user_id = $(this).val();
-    if(!user_id) return false;
-    $.post("__URL__/update_myroles", {"user_id":user_id}, function(data){
-      if(data.status == 1){
-        $("#roleList").children().remove();
-        for(var i = 0 ; i < data.info.length; i++){
-            var option = eval('"' + data.info[i] + '"');
-            $(option).appendTo("#roleList");
+$(function(){
+  $("#selectUser").change(function(){
+      var user_id = $(this).val();
+      if(!user_id) return false;
+      $.post("__URL__/update_myroles", {"user_id":user_id}, function(data){
+        if(data.status == 1){
+          $("#roleList").children().remove();
+              var option = eval('"' + data.info + '"');
+              $(option).appendTo("#roleList");
         }
-      }
-    });
+      });
+  })
 })
 </script>

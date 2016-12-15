@@ -99,18 +99,22 @@ class RoleController extends CommonController {
         }
     }
 
+    /**
+     * [update_myroles 更新用户角色绑定关系, 动态返回角色列表, 并选中用户已有的角色]
+     * @return [json] [返回角色列表, 选中用户已有的角色]
+     */
     public function update_myroles()
     {
         $user_id = I('post.user_id');
         $myRoleID = M('role_user')->where(['user_id' => $user_id])->getField('role_id');
         $roles = $this->model->getField('id, name', true);
         if(!empty($myRoleID))
-            $output[] = "<option value='{$myRoleID}' selected= 'selected'>{$roles[$myRoleID]}</option>";
-        else $output[] = "<option value='' selected= 'selected'>新分配一个角色</option>";
+            $output .= "<option value='{$myRoleID}' selected= 'selected'>{$roles[$myRoleID]}</option>";
+        else $output .= "<option value='' selected= 'selected'>新分配一个角色</option>";
         foreach($roles as $key => $value) 
         {
             if($key == $myRoleID) continue;
-            $output[] = "<option value='{$key}'>{$value}</option>";
+            $output .= "<option value='{$key}'>{$value}</option>";
         }
         $this->ajaxReturn(['status' => 1, 'info' => $output]);
     } 
