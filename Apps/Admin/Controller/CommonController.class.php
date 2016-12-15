@@ -13,24 +13,24 @@ class CommonController extends Controller {
             exit;
         }
         //权限判断, 任何方法都检查是否有读的权限
+        $action = substr(ACTION_NAME, 0, 6);
         $whitelist = ['login', 'logout', 'editmy'];
-        if(IS_GET && !in_array(ACTION_NAME, $whitelist))
+        if(IS_GET && !in_array($action, $whitelist))
         {
             $node = MODULE_NAME.'/'.CONTROLLER_NAME.'/read';
             //一些特殊节点需要的权限在具体控制器具体方法中去判断
             if(session('mi_game_admin.id') != 1 && !in_array($node, session('node')))
+            {
                 $this->error('您权限不足', U('Admin/Index/welcome'));
+                die;
+            }
         }
         //判断有没有写的权限
-        if(IS_POST && !empty($action = substr(ACTION_NAME, 0, 6)))
+        else if(IS_POST && in_array($action, ['create', 'update', 'delete', 'revers']))
         {
-            $blacklist = ['create', 'update', 'delete', 'revers'];
-            if(in_array($action, $blacklist))
-            {
-                $node = MODULE_NAME.'/'.CONTROLLER_NAME.'/write';
-                if(session('mi_game_admin.id') != 1 && !in_array($node, session('node')))
-                    $this->error('您权限不足', U('Admin/Index/welcome'));
-            }
+            $node = MODULE_NAME.'/'.CONTROLLER_NAME.'/write';
+            if(session('mi_game_admin.id') != 1 && !in_array($node, session('node')))
+                $this->error('您权限不足', U('Admin/Index/welcome'));  
         }
     }
 

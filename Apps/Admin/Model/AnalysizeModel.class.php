@@ -44,6 +44,7 @@ class AnalysizeModel extends \Think\Model
         $btn = $pagination->show();
         $list = $this->alias('a')->order('b.id asc')->field('a.income, a.active_users, a.arpu, a.orders, b.name, b.id')->join('join __CARRIER__ b on a.carrier_id = b.id')->where($map)->select();
         if(count($list) == 0) $list = null;
+        $date = $map['updated_time'];
         unset($map['updated_time']);
         $sum = $this->order('updated_time asc')->field('updated_time, sum(income) as total_income')->where($map)->group('updated_time')->limit(14)->select();
         //数据整理下再输出到前端
@@ -59,6 +60,7 @@ class AnalysizeModel extends \Think\Model
         }
         //查处下拉搜索框的运营商信息
         $carriers = M('carrier')->where(['status' => 1])->field(['id', 'name'])->select();
-        return ['list' => $list, 'statistics' => $arr, 'btn' => $btn, 'chartTitle' => $chartTitle, 'carriers' => $carriers];
+        echo $map['updated_time'];
+        return ['list' => $list, 'statistics' => $arr, 'btn' => $btn, 'chartTitle' => $chartTitle, 'carriers' => $carriers, 'date' => $date];
     }
 }

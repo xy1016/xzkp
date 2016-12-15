@@ -80,7 +80,7 @@ class RoleController extends CommonController {
             $map['status'] = 1;
             $map['isdelete'] = 0;
             $map['id'] = ['gt', 1];
-            $list['list'] = M('admin')->field('id, username')->where($map)->select();
+            $list['list'] = M('admin')->alias('a')->field('a.id, a.username, b.role_id')->join('left join __ROLE_USER__ b on a.id = b.user_id')->where($map)->select();
             $this->assign($list);
             $this->display('allocate'); 
         }
