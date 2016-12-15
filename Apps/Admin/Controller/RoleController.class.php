@@ -76,11 +76,10 @@ class RoleController extends CommonController {
     {
         if(IS_GET && IS_AJAX)
         {
-            $list['role'] = $this->model->field(['id', 'name'])->select();
             $map['status'] = 1;
             $map['isdelete'] = 0;
             $map['id'] = ['gt', 1];
-            $list['list'] = M('admin')->alias('a')->field('a.id, a.username, b.role_id')->join('left join __ROLE_USER__ b on a.id = b.user_id')->where($map)->select();
+            $list['list'] = M('admin')->where($map)->field('id, username')->select();
             $this->assign($list);
             $this->display('allocate'); 
         }
@@ -99,15 +98,22 @@ class RoleController extends CommonController {
             $this->ajaxReturn(['status' => 1]);
         }
     }
-/*  
-   public function get_action($id)
-   {  
-      $map['level'] = 3;
-      $map['pid'] = $id;
-      $map['status'] = 1;
-      if($res = $this->model->field(['id','remark'])->table(__NODE__)->where($map)->select())
-      $this->ajaxReturn(['status' =>1, 'data' => $res]);
-   }*/
+
+    public function update_myroles()
+    {
+        $user_id = I('post.user_id');
+        $myRoleID = M('role_user')->where(['user_id' => $user_id])->getField('role_id');
+        $roles = $this->model->getField('id, name', true);
+        if(!empty($myRoleID))
+            $output[] = "<option value='{$myRoleID}' selected= 'selected'>{$roles[$myRoleID]}</option>";
+        else $output[] = "<option value='' selected= 'selected'>新分配一个角色</option>";
+        foreach($roles as $key => $value) 
+        {
+            if($key == $myRoleID) continue;
+            $output[] = "<option value='{$key}'>{$value}</option>";
+        }
+        $this->ajaxReturn(['status' => 1, 'info' => $output]);
+    } 
 
     /**
      * [del 删除角色, 同时删除绑定该角色跟用户的绑定关系]
